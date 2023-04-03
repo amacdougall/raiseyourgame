@@ -1,4 +1,15 @@
 services:
+  frontend:
+    stdin_open: true
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    volumes:
+      - /app/node_modules
+      - ./frontend:/app
+    networks:
+      - frontend
   nodejs-server:
     build:
       context: ./nodejs-server
