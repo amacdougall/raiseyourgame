@@ -1,3 +1,4 @@
 node_modules
 scratch.sh
 notes.txt
+graphql-server/dist
