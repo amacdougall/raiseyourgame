@@ -31,6 +31,19 @@ services:
     networks:
       - frontend
       - backend
+  graphql-server:
+    build:
+      context: ./graphql-server
+      dockerfile: Dockerfile
+    container_name: graphql-server
+    restart: unless-stopped
+    # ports:
+    #   - "4000:4000"
+    depends_on:
+      - mongodb
+    networks:
+      - frontend
+      - backend
   mongodb:
     image: mongo
     restart: unless-stopped

@@ -19,8 +19,13 @@ const typeDefs = `#graphql
     url: String
   }
 
+  type Message {
+    message: String
+  }
+
   type Query {
     videos: [Video]
+    helloWorld: Message
   }
 `;
 
@@ -28,6 +33,9 @@ const resolvers = {
   Query: {
     videos: async (_, __, { dataSources }) => {
       return dataSources.raiseYourGameAPI.getVideos();
+    },
+    helloWorld: () => {
+      return { 'message': 'hello world!' };
     }
   }
 };

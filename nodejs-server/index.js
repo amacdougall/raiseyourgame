@@ -10,17 +10,17 @@ app.use(express.json());
 
 const PORT = process.env.NODE_DOCKER_PORT || 5000;
 
-app.get('/status', (req, res) => {
+app.get('/api/status', (req, res) => {
   res.send({status: "Hello world."});
 });
 
-app.get('/dbstatus', (req, res) => {
+app.get('/api/dbstatus', (req, res) => {
   mongoose.connect("mongodb://root:example@mongodb").then(() => {
     res.send({status: "Hello world. Successfully connected with mongoose. Now what?"});
   });
 });
 
-app.post('/video', async (req, res) => {
+app.post('/api/video', async (req, res) => {
   const { title, url } = req.body; // TODO: null/empty check, etc
 
   await mongoose.connect("mongodb://root:example@mongodb");
@@ -29,7 +29,7 @@ app.post('/video', async (req, res) => {
   res.send({status: `Posted video ${video}`});
 });
 
-app.get('/videos', async (req, res) => {
+app.get('/api/videos', async (req, res) => {
   await mongoose.connect("mongodb://root:example@mongodb");
   const videos = await Video.find({});
   // TODO: pagination? no, because we actually aren't going to need this route
