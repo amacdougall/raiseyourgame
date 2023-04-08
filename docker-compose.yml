@@ -1,5 +1,6 @@
 services:
   frontend:
+    profiles: ["frontend"]
     stdin_open: true
     build:
       context: ./frontend
@@ -11,6 +12,7 @@ services:
     networks:
       - frontend
   nodejs-server:
+    profiles: ["nodejs-server"]
     build:
       context: ./nodejs-server
       dockerfile: Dockerfile
@@ -32,6 +34,7 @@ services:
       - frontend
       - backend
   graphql-server:
+    profiles: ["graphql-server"]
     build:
       context: ./graphql-server
       dockerfile: Dockerfile

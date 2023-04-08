@@ -6,4 +6,5 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 
-CMD ["npm", "start"]
+# TODO: different commands in prod
+CMD ["npm", "run", "dev"]
