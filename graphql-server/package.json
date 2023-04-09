@@ -14,7 +14,8 @@
   "dependencies": {
     "@apollo/datasource-rest": "^5.0.2",
     "@apollo/server": "^4.6.0",
-    "graphql": "^16.6.0"
+    "graphql": "^16.6.0",
+    "mongoose": "^7.0.3"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",

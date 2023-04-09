@@ -6,9 +6,9 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: frontend
-    volumes:
-      - /app/node_modules
-      - ./frontend:/app
+      # volumes:
+      #   - /app/node_modules
+      #   - ./frontend:/app
     networks:
       - frontend
   nodejs-server:
@@ -56,6 +56,9 @@ services:
       MONGO_INITDB_DATABASE: raiseyourgame
       MONGODB_DATA_DIR: /data/db
       MONGODB_LOG_DIR: /dev/null
+    ports:
+      - "27017:27017"
+      # TODO: switch availability based on env
     volumes:
       - mongodbdata:/data/db
     networks:

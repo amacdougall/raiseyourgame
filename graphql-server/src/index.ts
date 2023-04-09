@@ -1,56 +1,106 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
-import RaiseYourGameAPI from './raiseyourgame-api.js';
-// this import needs to refer to the runtime filename (with the .js extension);
-// see https://stackoverflow.com/a/65975356.
+import mongoose from 'mongoose';
 
-interface ContextValue {
-  dataSources: {
-    raiseYourGameAPI: RaiseYourGameAPI
-  }
-}
+import Video from './models/video.js';
+import Comment from './models/comment.js';
+import Reply from './models/reply.js';
 
-// A schema is a collection of type definitions (hence "typeDefs")
-// that together define the "shape" of queries that are executed against
-// your data.
+// const MONGODB_URI = 'mongodb://root:example@mongodb';
+const MONGODB_URI = 'mongodb://root:example@localhost:27017';
+// TODO: switch based on docker/local?
+
+// TODO: different file
 const typeDefs = `#graphql
   type Video {
-    title: String
-    url: String
+    id: ID!
+    title: String!
+    url: String!
+    comments: [Comment!]
+    createdAt: String!
   }
 
-  type Message {
-    message: String
+  type VideoInput {
+    title: String!
+    url: String!
+  }
+
+  type Comment {
+    id: ID!
+    timecode: Float!
+    content: String!
+    replies: [Reply!]
+    createdAt: String!
+  }
+
+  type CommentInput {
+    timecode: Float!
+    content: String!
+  }
+
+  type Reply {
+    id: ID!
+    content: String!
+    createdAt: String!
+  }
+
+  type ReplyInput {
+    content: String!
   }
 
   type Query {
     videos: [Video]
-    helloWorld: Message
+    video(id: ID!): Video
+  }
+
+  type Mutation {
+    createVideo(input: VideoInput!): Video
+
+    addComment(videoId: ID!, input: CommentInput!): Video
+    updateComment(commentId: ID!, input: CommentInput!): Video
+    deleteComment(commentId: ID!): Video
+
+    addReply(commentId: ID!, input: ReplyInput!): Video
+    updateReply(replyId: ID!, input: ReplyInput!): Video
+    deleteReply(replyId: ID!): Video
   }
 `;
 
+// TODO: put resolvers in a different file
 const resolvers = {
   Query: {
-    videos: async (_, __, { dataSources }) => {
-      return dataSources.raiseYourGameAPI.getVideos();
+    videos: async () => {
+      return await Video.find({});
     },
-    helloWorld: () => {
-      return { 'message': 'hello world!' };
+
+    video: async (_, { id }) => {
+      return await Video.findById(id);
+    }
+  },
+
+  Mutation: {
+    createVideo: async (_, { title, url }) => {
+      const video = new Video({ title, url });
+      await video.save();
+      return video;
+    },
+    
+    addComment: async (_, { videoId, timecode, content }) => {
+      const comment = new Comment({ timecode, content });
+      const video = Video.find({ id: videoId });
+      video.comments.push(comment);
+      return video;
     }
   }
 };
 
-const server = new ApolloServer<ContextValue>({ typeDefs, resolvers });
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log('Apollo connected to MongoDB!'))
+  .catch(err => console.log(`Apollo failed to connect to MongoDB: ${err.message}`));
+
+const server = new ApolloServer({ typeDefs, resolvers });
 
 const { url } = await startStandaloneServer(server, {
-  context: async () => {
-    const { cache } = server;
-    return {
-      dataSources: {
-        raiseYourGameAPI: new RaiseYourGameAPI({ cache })
-      }
-    };
-  },
   listen: { port: 4000 },
 });
 
