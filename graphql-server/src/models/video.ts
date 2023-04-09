@@ -1,11 +1,24 @@
 import { Schema, model } from 'mongoose';
-import Comment from './comment';
 
-const Video = model('Video', new Schema({
+const replySchema = new Schema({
+  content: String,
+  createdAt: String
+});
+
+const commentSchema = new Schema({
+  timecode: Number,
+  content: String,
+  replies: [replySchema],
+  createdAt: String
+});
+
+const videoSchema = new Schema({
   title: String,
   url: String,
   createdAt: String,
-  comments: [Comment]
-}));
+  comments: [commentSchema]
+});
+
+const Video = model('Video', videoSchema);
 
 export default Video;

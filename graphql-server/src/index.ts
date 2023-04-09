@@ -2,9 +2,7 @@ import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import mongoose from 'mongoose';
 
-import Video from './models/video.js';
-import Comment from './models/comment.js';
-import Reply from './models/reply.js';
+import Video from './models/video.js'; // no model classes for subdocuments?
 
 // const MONGODB_URI = 'mongodb://root:example@mongodb';
 const MONGODB_URI = 'mongodb://root:example@localhost:27017';
@@ -20,7 +18,7 @@ const typeDefs = `#graphql
     createdAt: String!
   }
 
-  type VideoInput {
+  input VideoInput {
     title: String!
     url: String!
   }
@@ -33,8 +31,12 @@ const typeDefs = `#graphql
     createdAt: String!
   }
 
-  type CommentInput {
+  input CommentInput {
     timecode: Float!
+    content: String!
+  }
+
+  input UpdateCommentInput {
     content: String!
   }
 
@@ -44,7 +46,7 @@ const typeDefs = `#graphql
     createdAt: String!
   }
 
-  type ReplyInput {
+  input ReplyInput {
     content: String!
   }
 
@@ -57,12 +59,12 @@ const typeDefs = `#graphql
     createVideo(input: VideoInput!): Video
 
     addComment(videoId: ID!, input: CommentInput!): Video
-    updateComment(commentId: ID!, input: CommentInput!): Video
-    deleteComment(commentId: ID!): Video
+    updateComment(videoId: ID!, commentId: ID!, input: UpdateCommentInput!): Video
+    deleteComment(videoId: ID!, commentId: ID!): Video
 
-    addReply(commentId: ID!, input: ReplyInput!): Video
-    updateReply(replyId: ID!, input: ReplyInput!): Video
-    deleteReply(replyId: ID!): Video
+    addReply(videoId: ID!, commentId: ID!, input: ReplyInput!): Video
+    updateReply(videoId: ID!, commentId: ID!, replyId: ID!, input: ReplyInput!): Video
+    deleteReply(videoId: ID!, commentId: ID!, replyId: ID!): Video
   }
 `;
 
@@ -79,16 +81,28 @@ const resolvers = {
   },
 
   Mutation: {
-    createVideo: async (_, { title, url }) => {
+    createVideo: async (_, { input: { title, url }}) => {
       const video = new Video({ title, url });
       await video.save();
       return video;
     },
-    
-    addComment: async (_, { videoId, timecode, content }) => {
-      const comment = new Comment({ timecode, content });
-      const video = Video.find({ id: videoId });
-      video.comments.push(comment);
+
+    addComment: async (_, { videoId, input: { timecode, content } }) => {
+      const video = await Video.findById(videoId);
+      video.comments.push({
+        timecode,
+        content,
+        createdAt: new Date().toISOString()
+      });
+      await video.save();
+      return video;
+    },
+
+    updateComment: async (_, { videoId, commentId, input: { content } }) => {
+      const video = await Video.findById(videoId);
+      const comment = video.comments.id(commentId);
+      comment.content = content;
+      await video.save();
       return video;
     }
   }
