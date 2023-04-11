@@ -82,7 +82,11 @@ const resolvers = {
 
   Mutation: {
     createVideo: async (_, { input: { title, url }}) => {
-      const video = new Video({ title, url });
+      const video = new Video({
+        title,
+        url,
+        createdAt: new Date().toISOString()
+      });
       await video.save();
       return video;
     },
