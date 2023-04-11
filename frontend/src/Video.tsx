@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, useLoaderData } from 'react-router-dom';
-import CommentView from './CommentView';
+import CommentView from './components/CommentView';
 
 const Video = () => {
   const { video } = useLoaderData();
