@@ -1,11 +1,12 @@
 import React from 'react';
 import Container from '@mui/material/Container';
 import { createBrowserRouter, RouterProvider, redirect } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 import Home from './Home';
 import Video from './Video';
 import VideoService from './services/VideoService';
-
+import ApplicationContext from './ApplicationContext';
 
 const router = createBrowserRouter([
   {
@@ -59,12 +60,20 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const initialApplicationContext = {
+    session: uuidv4(),
+    username: 'anonymous'
+  };
+
   return (
     <Container sx={{
       margin: 'auto',
       width: '100%'
     }}>
-      <RouterProvider router={router} />
+      { /* TODO: try to get existing value from localStorage */ }
+      <ApplicationContext.Provider value={{}}>
+        <RouterProvider router={router} />
+      </ApplicationContext.Provider>
     </Container>
   );
 }
