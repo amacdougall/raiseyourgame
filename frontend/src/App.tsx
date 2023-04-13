@@ -75,9 +75,8 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <Container sx={{
-      margin: 'auto',
-      width: '100%'
+    <Container disableGutters maxWidth={false} sx={{
+      margin: 0
     }}>
       <RouterProvider router={router} />
     </Container>
