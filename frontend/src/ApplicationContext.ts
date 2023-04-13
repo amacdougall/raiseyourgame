@@ -1,7 +1,8 @@
 import { createContext } from 'react';
 
 const ApplicationContext = createContext({
-  session: null,
+  sessionId: null,
+  token: null,
   username: null
 });
 

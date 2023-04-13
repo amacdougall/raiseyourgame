@@ -6,18 +6,22 @@ export const CREATE_VIDEO = gql`
       id
       title
       url
+      createdAt
       comments {
         id
         timecode
         content
+        sessionId
+        username
+        createdAt
         replies {
           id
           content
+          sessionId
+          username
           createdAt
         }
-        createdAt
       }
-      createdAt
     }
   }
 `;
@@ -28,18 +32,22 @@ export const ADD_COMMENT = gql`
       id
       title
       url
+      createdAt
       comments {
         id
         timecode
         content
+        sessionId
+        username
+        createdAt
         replies {
           id
           content
+          sessionId
+          username
           createdAt
         }
-        createdAt
       }
-      createdAt
     }
   }
 `;

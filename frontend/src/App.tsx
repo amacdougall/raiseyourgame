@@ -6,7 +6,18 @@ import { v4 as uuidv4 } from 'uuid';
 import Home from './Home';
 import Video from './Video';
 import VideoService from './services/VideoService';
-import ApplicationContext from './ApplicationContext';
+
+if (localStorage.getItem('sessionId') === null) {
+  localStorage.setItem('sessionId', uuidv4());
+}
+
+if (localStorage.getItem('token') === null) {
+  localStorage.setItem('token', uuidv4());
+}
+
+if (localStorage.getItem('username') === null) {
+  localStorage.setItem('username', 'Anonymous');
+}
 
 const router = createBrowserRouter([
   {
@@ -49,7 +60,10 @@ const router = createBrowserRouter([
         params.videoId,
         {
           timecode: commentTimecode,
-          content: commentContent
+          content: commentContent,
+          sessionId: localStorage.getItem('sessionId'),
+          token: localStorage.getItem('token'),
+          username: localStorage.getItem('username')
         }
       );
 
@@ -60,20 +74,12 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const initialApplicationContext = {
-    session: uuidv4(),
-    username: 'anonymous'
-  };
-
   return (
     <Container sx={{
       margin: 'auto',
       width: '100%'
     }}>
-      { /* TODO: try to get existing value from localStorage */ }
-      <ApplicationContext.Provider value={{}}>
-        <RouterProvider router={router} />
-      </ApplicationContext.Provider>
+      <RouterProvider router={router} />
     </Container>
   );
 }

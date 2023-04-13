@@ -1,4 +1,5 @@
 import { ApolloServer } from '@apollo/server';
+import { GraphQLError } from 'graphql';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import mongoose from 'mongoose';
 
@@ -27,6 +28,9 @@ const typeDefs = `#graphql
     id: ID!
     timecode: Float!
     content: String!
+    sessionId: String!
+    username: String!
+    token: String!
     replies: [Reply!]
     createdAt: String!
   }
@@ -34,20 +38,35 @@ const typeDefs = `#graphql
   input CommentInput {
     timecode: Float!
     content: String!
+    sessionId: String!
+    token: String!
+    username: String!
   }
 
   input UpdateCommentInput {
     content: String!
+    token: String!
   }
 
   type Reply {
     id: ID!
     content: String!
+    sessionId: String!
+    token: String!
+    username: String!
     createdAt: String!
   }
 
   input ReplyInput {
     content: String!
+    sessionId: String!
+    token: String!
+    username: String!
+  }
+
+  input UpdateReplyInput {
+    content: String!
+    token: String!
   }
 
   type Query {
@@ -63,7 +82,7 @@ const typeDefs = `#graphql
     deleteComment(videoId: ID!, commentId: ID!): Video
 
     addReply(videoId: ID!, commentId: ID!, input: ReplyInput!): Video
-    updateReply(videoId: ID!, commentId: ID!, replyId: ID!, input: ReplyInput!): Video
+    updateReply(videoId: ID!, commentId: ID!, replyId: ID!, input: UpdateReplyInput!): Video
     deleteReply(videoId: ID!, commentId: ID!, replyId: ID!): Video
   }
 `;
@@ -91,20 +110,27 @@ const resolvers = {
       return video;
     },
 
-    addComment: async (_, { videoId, input: { timecode, content } }) => {
+    addComment: async (_, {
+      videoId,
+      input: { timecode, content, sessionId, token, username }
+    }) => {
       const video = await Video.findById(videoId);
       video.comments.push({
-        timecode,
-        content,
+        timecode, content, sessionId, token, username,
         createdAt: new Date().toISOString()
       });
       await video.save();
       return video;
     },
 
-    updateComment: async (_, { videoId, commentId, input: { content } }) => {
+    updateComment: async (_, { videoId, commentId, input: { content, token } }) => {
       const video = await Video.findById(videoId);
       const comment = video.comments.id(commentId);
+      if (comment.token !== token) {
+        throw new GraphQLError('Unauthorized', {
+          extensions: { code: 'UNAUTHORIZED' }
+        });
+      }
       comment.content = content;
       await video.save();
       return video;

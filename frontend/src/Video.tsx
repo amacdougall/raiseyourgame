@@ -5,10 +5,15 @@ import CommentView from './components/CommentView';
 const Video = () => {
   const { video } = useLoaderData();
 
-  console.log("first comment: %o", video.comments[0]);
-
   const comments = video.comments.map((comment) => {
-    return <CommentView key={comment.id} comment={comment} />;
+    const editable = comment.sessionId === localStorage.getItem('sessionId');
+    return (
+      <CommentView
+        key={comment.id}
+        comment={comment}
+        editable={editable}
+      />
+    );
   });
 
   return (
