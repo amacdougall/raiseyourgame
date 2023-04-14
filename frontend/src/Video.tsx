@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import { Form, useLoaderData } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -9,6 +10,9 @@ import Typography from '@mui/material/Typography';
 import CommentView from './components/CommentView';
 import VideoPlayer from './components/VideoPlayer';
 
+/**
+ * Page containing video player, comments, and replies.
+ */
 const Video = () => {
   const { video } = useLoaderData();
 
@@ -26,7 +30,15 @@ const Video = () => {
   return (
     <React.Fragment>
       {/* TODO: separate component */}
-      <VideoPlayer video={video} />
+      <VideoPlayer
+        video={video}
+        onPlay={() => console.log('video play')}
+        onPause={() => console.log('video pause')}
+        onEnd={() => console.log('video end')}
+        onProgress={({time, duration}) => {
+          console.log('video progress: %i / %f', time, duration);
+        }}
+      />
       {/* TODO: playback timeline, with comments */}
       <Grid id="commentGrid" container spacing={1} sx={{marginLeft: '1rem'}}>
         <Grid item xs={12}>
