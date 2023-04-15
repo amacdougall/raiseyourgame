@@ -15,7 +15,8 @@ const Home = () => {
       { /* TODO: layout/style with Material UI */ }
       <Form name="createVideo" action="/video" method="post">
         <div>
-          <label>Youtube Embed URL: 
+          { /* TODO: validate URL */ }
+          <label>Youtube video URL:
             <input
               type="text"
               name="videoUrl"

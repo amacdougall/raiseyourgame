@@ -21,7 +21,7 @@ const commentSchema = new Schema({
 
 const videoSchema = new Schema({
   title: String,
-  url: String,
+  youTubeId: String,
   createdAt: String,
   comments: [commentSchema]
 });

@@ -14,7 +14,7 @@ const typeDefs = `#graphql
   type Video {
     id: ID!
     title: String!
-    url: String!
+    youTubeId: String!
     comments: [Comment!]
     createdAt: String!
   }
@@ -71,7 +71,7 @@ const typeDefs = `#graphql
 
   type Query {
     videos: [Video]
-    video(id: ID!): Video
+    video(videoId: ID!): Video
   }
 
   type Mutation {
@@ -94,16 +94,32 @@ const resolvers = {
       return await Video.find({});
     },
 
-    video: async (_, { id }) => {
-      return await Video.findById(id);
+    video: async (_, { videoId }) => {
+      return await Video.findById(videoId);
     }
   },
 
   Mutation: {
     createVideo: async (_, { input: { title, url }}) => {
+      // extract YouTube video id from url
+      let youTubeId = '';
+      if (url.indexOf('youtube.com/watch?v=') !== -1) {
+        const urlObject = new URL(url);
+        youTubeId = urlObject.searchParams.get('v');
+      } else if (url.indexOf('youtu.be/') !== -1) {
+        const urlObject = new URL(url);
+        youTubeId = urlObject.pathname.split('/')[1].split('?')[0].split('#')[0];
+      } else if (url.indexOf('youtube.com/embed/') !== -1) {
+        youTubeId = url.split('/embed/')[1].split('?')[0].split('#')[0];
+      } else {
+        throw new GraphQLError('Invalid YouTube URL', {
+          extensions: { code: 'INVALID_YOUTUBE_URL' }
+        });
+      }
+
       const video = new Video({
         title,
-        url,
+        youTubeId,
         createdAt: new Date().toISOString()
       });
       await video.save();

@@ -5,7 +5,7 @@ export const CREATE_VIDEO = gql`
     createVideo(input: $input) {
       id
       title
-      url
+      youTubeId
       createdAt
       comments {
         id
@@ -31,7 +31,7 @@ export const ADD_COMMENT = gql`
     addComment(videoId: $videoId, input: $input) {
       id
       title
-      url
+      youTubeId
       createdAt
       comments {
         id

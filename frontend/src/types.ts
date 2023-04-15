@@ -1,9 +1,10 @@
-export type Video {
-  id: ID!
-  title: String!
-  url: String!
-  comments: [Comment!]
-  createdAt: String!
+// typescript interface for Video object
+export interface Video {
+  id: string;
+  title: string;
+  youTubeId: string;
+  comments: Comment[];
+  createdAt: string;
 }
 
 export interface VideoInput {
@@ -11,14 +12,14 @@ export interface VideoInput {
   url: string;
 }
 
-export type Comment {
-  id: ID!
-  timecode: Float!
-  content: String!
-  sessionId: String!
-  username: String!
-  replies: [Reply!]
-  createdAt: String!
+export interface Comment {
+  id: string;
+  timecode: number;
+  content: string;
+  sessionId: string;
+  username: string;
+  replies: Reply[];
+  createdAt: string;
 }
 
 export interface CommentInput {
@@ -34,12 +35,12 @@ export interface UpdateCommentInput {
   token: string;
 }
 
-export type Reply {
-  id: ID!
-  content: String!
-  sessionId: String!
-  username: String!
-  createdAt: String!
+export interface Reply {
+  id: string;
+  content: string;
+  sessionId: string;
+  username: string;
+  createdAt: string;
 }
 
 export interface ReplyInput {
