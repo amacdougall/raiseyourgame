@@ -5,9 +5,11 @@ import { Form, useLoaderData } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 
 import CommentView from './components/CommentView';
+import Timeline from './components/Timeline';
 import VideoPlayer from './components/VideoPlayer';
 
 /**
@@ -15,6 +17,8 @@ import VideoPlayer from './components/VideoPlayer';
  */
 const Video = () => {
   const { video } = useLoaderData();
+  const [ playbackTime, setPlaybackTime ] = useState(0);
+  const [ videoDuration, setVideoDuration ] = useState(100);
 
   const comments = video.comments.map((comment) => {
     const editable = comment.sessionId === localStorage.getItem('sessionId');
@@ -29,17 +33,22 @@ const Video = () => {
 
   return (
     <React.Fragment>
-      {/* TODO: separate component */}
       <VideoPlayer
         video={video}
+        onReady={({duration}) => setVideoDuration(duration)}
         onPlay={() => console.log('video play')}
         onPause={() => console.log('video pause')}
         onEnd={() => console.log('video end')}
         onProgress={({time, duration}) => {
-          console.log('video progress: %i / %f', time, duration);
+          setPlaybackTime(time);
+          setVideoDuration(duration);
         }}
       />
-      {/* TODO: playback timeline, with comments */}
+      <Timeline
+        time={playbackTime}
+        duration={videoDuration}
+        comments={video.comments}
+      />
       <Grid id="commentGrid" container spacing={1} sx={{marginLeft: '1rem'}}>
         <Grid item xs={12}>
           <h2>Comments</h2>

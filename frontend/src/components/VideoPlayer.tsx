@@ -1,12 +1,24 @@
 import React from 'react';
 import YouTube from 'react-youtube';
 
-const VideoPlayer = ({
-  onReady, onPlay, onPause, onEnd, onProgress
-}) => {
-  // has to be included in both style and opts; not sure why
-  const videoDimensions = { width: '100%', height: '100%' };
+/**
+ * VideoPlayer for YouTube videos. Accepts YouTube video ID.
 
+ * Currently uses YouTube IFrame API, but we might move to an HTML5 player with
+ * an iframe fallback. We're hiding implementation details; you might notice
+ * that the YouTube API has no onProgress event, for instance. We're polling
+ * during playback to generate this event.
+ *
+ * @param {string} video: YouTube video ID
+ * @param {function} onReady: receives kwarg 'duration'
+ * @param {function} onPlay: no args
+ * @param {function} onPause: no args
+ * @param {function} onEnd: no args
+ * @param {function} onProgress: receives kwargs 'time', 'duration'
+ */
+const VideoPlayer = ({
+  video, onReady, onPlay, onPause, onEnd, onProgress
+}) => {
   let progressInterval = null;
 
   const startReportingProgress = (event) => {
@@ -16,7 +28,7 @@ const VideoPlayer = ({
         time: event.target.getCurrentTime(),
         duration: event.target.getDuration()
       });
-    }, 1000); // TODO: faster, of course
+    }, 200);
   };
 
   const stopReportingProgress = () => clearInterval(progressInterval);
@@ -51,7 +63,7 @@ const VideoPlayer = ({
           ...videoDimensions,
           frameBorder: 0
         }}
-        onReady={onReady}
+        onReady={event => onReady({duration: event.target.getDuration()})}
         onPlay={onPlay}
         onPause={onPause}
         onEnd={onEnd}
