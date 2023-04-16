@@ -20,7 +20,7 @@ const Timeline = ({time, duration, comments}) => {
         variant="determinate"
         value={time / duration * 100}
       />
-      <Box sx={{position: 'relative', marginTop: '-5px', zIndex: '10'}}>
+      <Box sx={{position: 'relative', marginTop: '-1px', zIndex: '10'}}>
         {markers}
       </Box>
     </div>

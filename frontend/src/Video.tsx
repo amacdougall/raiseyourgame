@@ -6,9 +6,11 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import LinearProgress from '@mui/material/LinearProgress';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import CommentView from './components/CommentView';
+import DebugCommentView from './components/DebugCommentView';
 import Timeline from './components/Timeline';
 import VideoPlayer from './components/VideoPlayer';
 
@@ -20,13 +22,25 @@ const Video = () => {
   const [ playbackTime, setPlaybackTime ] = useState(0);
   const [ videoDuration, setVideoDuration ] = useState(100);
 
-  const comments = video.comments.map((comment) => {
+  const debugComments = video.comments.map(comment => {
+    const editable = comment.sessionId === localStorage.getItem('sessionId');
+    return (
+      <DebugCommentView
+        key={comment.id}
+        comment={comment}
+        editable={editable}
+      />
+    );
+  });
+
+  const comments = video.comments.map(comment => {
     const editable = comment.sessionId === localStorage.getItem('sessionId');
     return (
       <CommentView
         key={comment.id}
         comment={comment}
         editable={editable}
+        playbackTime={playbackTime}
       />
     );
   });
@@ -49,10 +63,19 @@ const Video = () => {
         duration={videoDuration}
         comments={video.comments}
       />
-      <Grid id="commentGrid" container spacing={1} sx={{marginLeft: '1rem'}}>
-        <Grid item xs={12}>
-          <h2>Comments</h2>
-          <div>{comments}</div>
+      <Stack
+        spacing={2}
+        justifyContent="center"
+        alignItems="center"
+        sx={{marginTop: '1rem'}}
+      >
+        {comments}
+      </Stack>
+      <Grid id="debugCommentGrid" container spacing={1} sx={{marginLeft: '1rem'}}>
+        <Grid item xs={12} sx={{marginTop: '5rem'}}>
+          <hr />
+          <h2>Debug: All Comments</h2>
+          <div>{debugComments}</div>
           <h2>Add a comment</h2>
           <Form name="createComment" action={`/video/${video.id}/comment`} method="post">
             <div>
