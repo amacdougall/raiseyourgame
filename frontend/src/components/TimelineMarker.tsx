@@ -21,7 +21,11 @@ const TimelineMarker = ({position}) => {
     .join(' ');
 
   return (
-    <Box sx={{position: 'absolute', left: position + '%'}}>
+    <Box sx={{
+      position: 'absolute',
+      left: position + '%',
+      marginLeft: -(width / 2) + 'px',
+    }}>
       <svg
         version='1.1'
         width={width}
