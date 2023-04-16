@@ -21,6 +21,7 @@ const Home = () => {
               type="text"
               name="videoUrl"
               id="videoUrl"
+              value={videoUrl}
               onChange={e => setVideoUrl(e.target.value)}
             />
           </label>
@@ -31,6 +32,7 @@ const Home = () => {
               type="text"
               name="videoTitle"
               id="videoTitle"
+              value={videoTitle}
               placeholder="leave blank to use YouTube title"
               onChange={e => setVideoTitle(e.target.value)}
             />

@@ -53,14 +53,14 @@ const router = createBrowserRouter([
     element: <Video />,
     action: async ({ params, request }) => {
       const formData = await request.formData();
-      const commentTimecode = parseFloat(formData.get('commentTimecode'));
-      const commentContent = formData.get('commentContent');
+      const timecode = parseFloat(formData.get('timecode'));
+      const content = formData.get('content');
 
       const { data } = await VideoService.addComment(
         params.videoId,
         {
-          timecode: commentTimecode,
-          content: commentContent,
+          timecode,
+          content,
           sessionId: localStorage.getItem('sessionId'),
           token: localStorage.getItem('token'),
           username: localStorage.getItem('username')

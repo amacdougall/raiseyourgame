@@ -9,6 +9,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
+import CommentAdd from './components/CommentAdd';
 import CommentView from './components/CommentView';
 import DebugCommentView from './components/DebugCommentView';
 import Timeline from './components/Timeline';
@@ -45,6 +46,16 @@ const Video = () => {
     );
   });
 
+  comments.push(
+    // TODO: hide CommandAdd until activated
+    <CommentAdd
+      key="commentAdd"
+      video={video}
+      playbackTime={playbackTime}
+      visible={true}
+    />
+  );
+
   return (
     <React.Fragment>
       <VideoPlayer
@@ -64,7 +75,7 @@ const Video = () => {
         comments={video.comments}
       />
       <Stack
-        spacing={2}
+        spacing={0}
         justifyContent="center"
         alignItems="center"
         sx={{marginTop: '1rem'}}

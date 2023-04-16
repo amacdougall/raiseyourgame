@@ -14,7 +14,7 @@ const Timeline = ({time, duration, comments}) => {
   });
 
   return (
-    <div>
+    <Box sx={{paddingBottom: '1rem'}}>
       <LinearProgress
         sx={{height: 10}}
         variant="determinate"
@@ -23,7 +23,7 @@ const Timeline = ({time, duration, comments}) => {
       <Box sx={{position: 'relative', marginTop: '-1px', zIndex: '10'}}>
         {markers}
       </Box>
-    </div>
+    </Box>
   );
 };
 
