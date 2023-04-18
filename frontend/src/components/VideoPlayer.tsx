@@ -1,5 +1,18 @@
 import React from 'react';
+import { useState } from 'react';
 import YouTube from 'react-youtube';
+import useInterval from '../hooks/useInterval';
+
+// NOTE: I tried installing @types/youtube and referencing it in tsconfig.json,
+// but it didn't work and I didn't want to get bogged down on the topic.
+const PlayerState = {
+  UNSTARTED: -1,
+  ENDED: 0,
+  PLAYING: 1,
+  PAUSED: 2,
+  BUFFERING: 3,
+  CUED: 5
+};
 
 /**
  * VideoPlayer for YouTube videos. Accepts YouTube video ID.
@@ -15,36 +28,38 @@ import YouTube from 'react-youtube';
  * @param {function} onPause: no args
  * @param {function} onEnd: no args
  * @param {function} onProgress: receives kwargs 'time', 'duration'
+ * @param {function} onPlayerFocus: no args
+ * @param {function} onPlayerFocusOut: no args
  */
 const VideoPlayer = ({
-  video, onReady, onPlay, onPause, onEnd, onProgress
+  video, onReady, onPlay, onPause, onEnd, onProgress,
+  onPlayerFocus, onPlayerFocusOut
 }) => {
-  let progressInterval = null;
+  const [ player, setPlayer ] = useState(null);
+  const [ activeElement, setActiveElement ] = useState(null);
+  const [ playerState, setPlayerState ] = useState(null);
+  const [ progressInterval, setProgressInterval ] = useState(null);
 
-  const startReportingProgress = (event) => {
-    // event.target is the YT.Player instance
-    progressInterval = setInterval(() => {
-      onProgress({
-        time: event.target.getCurrentTime(),
-        duration: event.target.getDuration()
-      });
-    }, 200);
-  };
+  useInterval(() => {
+    onProgress({
+      time: player.getCurrentTime(),
+      duration: player.getDuration()
+    });
+  }, playerState === PlayerState.PLAYING ? 200 : null);
 
-  const stopReportingProgress = () => clearInterval(progressInterval);
-
-  const onStateChange = (event) => {
-    switch (event.data) {
-      case YT.PlayerState.PLAYING:
-        startReportingProgress(event);
-        break;
-      case YT.PlayerState.PAUSED:
-      case YT.PlayerState.ENDED:
-      case YT.PlayerState.BUFFERING:
-        stopReportingProgress();
-        break;
+  useInterval(() => {
+    if (activeElement !== window.document.activeElement) {
+      const playerFrame = document.getElementById('video-player');
+      if (activeElement === playerFrame) {
+        onPlayerFocusOut();
+      } else if (window.document.activeElement === playerFrame) {
+        onPlayerFocus();
+      }
+      setActiveElement(window.document.activeElement);
     }
-  };
+  }, player ? 1000 : null); // TODO: a bit faster
+
+  const onStateChange = event => setPlayerState(event.data);
 
   // has to be included in both style and opts; not sure why
   const videoDimensions = { width: '100%', height: '100%' };
@@ -52,6 +67,7 @@ const VideoPlayer = ({
   return (
     <div style={{position: 'relative', margin: 0, paddingBottom: '56.25%', height: 0}}>
       <YouTube
+        id='video-player'
         videoId={video.youTubeId}
         style={{
           ...videoDimensions,
@@ -63,7 +79,10 @@ const VideoPlayer = ({
           ...videoDimensions,
           frameBorder: 0
         }}
-        onReady={event => onReady({duration: event.target.getDuration()})}
+        onReady={event => {
+          setPlayer(event.target);
+          onReady({player: event.target});
+        }}
         onPlay={onPlay}
         onPause={onPause}
         onEnd={onEnd}

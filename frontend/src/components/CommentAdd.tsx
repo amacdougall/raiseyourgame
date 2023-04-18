@@ -28,9 +28,8 @@ const CommentAdd = ({video, playbackTime, visible}) => {
           action={`/video/${video.id}/comment`}
           method="post"
           onSubmit={e => {
-            // TODO: add an actual validation?
-            if (e.target.content.value === '') {
-              e.preventDefault();
+            if (content === '') {
+              e.preventDefault(); // cancels submit
             }
             setContent('');
           }}

@@ -6,8 +6,6 @@ import TimelineMarker from './TimelineMarker';
 const Timeline = ({time, duration, comments}) => {
   const markers = comments.map((comment) => {
     const position = comment.timecode / duration * 100;
-    console.log("positioning timeline marker at %i / %i; %i %",
-      comment.timecode, duration, position);
     return (
       <TimelineMarker position={position} key={comment.id} />
     );
