@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Form, useLoaderData } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -10,6 +10,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import CommentAdd from './components/CommentAdd';
+import CommentAddButton from './components/CommentAddButton';
 import CommentView from './components/CommentView';
 import DebugCommentView from './components/DebugCommentView';
 import GoButton from './components/GoButton';
@@ -33,6 +34,23 @@ const Video = () => {
   const [ commentState, setCommentState ] = useState(COMMENT_STATE.READY);
   const [ iframePollingInterval, setIframePollingInterval ] = useState(null);
 
+  useEffect(() => {
+    // defined within useEffect to get latest state variables
+    const onKeyDown = event => {
+      // cancel PgDn effect of spacebar
+      if (event.key === ' ') {
+        event.preventDefault();
+      }
+
+      if (commentState === COMMENT_STATE.REVIEWING) {
+        pauseForComment();
+      }
+    };
+
+    document.body.addEventListener('keydown', onKeyDown);
+    return () => document.body.removeEventListener('keydown', onKeyDown);
+  }, [commentState]);
+
   const onReady = ({player}) => {
     setPlayer(player);
     setVideoDuration(player.getDuration());
@@ -42,6 +60,14 @@ const Video = () => {
     // when player is focused, we can't receive keyboard input, so commenting
     // won't work; switch to READY state to display GoButton
     setCommentState(COMMENT_STATE.READY);
+  };
+
+  const onGoButtonClick = () => {
+    // NOTE: hidden button can retain focus and be "clicked" by Enter
+    // keystroke; so limit this behavior to the READY state.
+    if (commentState == COMMENT_STATE.READY) {
+      beginReviewing();
+    }
   };
 
   const beginReviewing = () => {
@@ -56,7 +82,7 @@ const Video = () => {
     if (player === null) {
       return;
     }
-    player.pause();
+    player.pauseVideo();
     setCommentState(COMMENT_STATE.COMMENTING);
   };
 
@@ -81,10 +107,10 @@ const Video = () => {
         playbackTime={playbackTime}
       />
     );
-  });
+  }).reverse();
 
   return (
-    <React.Fragment>
+    <Box>
       <VideoPlayer
         video={video}
         onReady={onReady}
@@ -111,20 +137,27 @@ const Video = () => {
       >
         <GoButton
           visible={commentState === COMMENT_STATE.READY}
-          onClick={beginReviewing}
+          onClick={onGoButtonClick}
         />
-        {comments}
+        <CommentAddButton
+          visible={commentState === COMMENT_STATE.REVIEWING}
+          onClick={pauseForComment}
+        />
         <CommentAdd
           key="commentAdd"
           video={video}
           playbackTime={playbackTime}
           visible={commentState === COMMENT_STATE.COMMENTING}
+          onSubmit={beginReviewing}
+          onCancel={beginReviewing}
         />
+        {comments}
       </Stack>
       <Grid id="debugCommentGrid" container spacing={1} sx={{marginLeft: '1rem'}}>
         <Grid item xs={12} sx={{marginTop: '5rem'}}>
           <hr />
           <h2>Debug: Comment State: {commentState}</h2>
+          <h2>Debug: active item: {document.activeElement.tagName}</h2>
           <h2>Debug: All Comments</h2>
           <div>{debugComments}</div>
           <h2>Add a comment</h2>
@@ -134,7 +167,6 @@ const Video = () => {
               <input type="text" name="commentTimecode" id="commentTimecode" />
             </label>
             </div>
-            {/* TODO: make a separate component for comment input */}
             <div>
               <label htmlFor="commentContent">Comment:</label>
               <textarea name="commentContent" id="commentContent"></textarea>
@@ -143,7 +175,7 @@ const Video = () => {
           </Form>
         </Grid>
       </Grid>
-    </React.Fragment>
+    </Box>
   );
 };
 

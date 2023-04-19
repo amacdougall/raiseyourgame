@@ -17,15 +17,29 @@ const CommentView = ({comment, editable, playbackTime}) => {
     playbackTime < comment.timecode + DISPLAY_DURATION
   );
 
+  const paragraphs = comment.content.split(/\r?\n/).map((p, n) => {
+    return (
+      <Typography key={n} variant="body" component="div">
+        {p}
+      </Typography>
+    );
+  });
+
+  const formatTimecode = timecode => {
+    const minutes = Math.floor(timecode / 60);
+    const seconds = Math.floor(timecode % 60);
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  };
+
   return (
     <Collapse in={visible} collapsedSize={0} sx={{ width: '90%' }} >
-      <Card>
+      <Card sx={{marginTop: '1rem'}}>
         <CardContent>
           <Typography variant="body" component="div">
-            {comment.content}
+            {paragraphs}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            <strong>{comment.username}</strong> at {comment.createdAt}
+            <strong>{comment.username}</strong> at {formatTimecode(comment.timecode)}
           </Typography>
         </CardContent>
         { editable ?
