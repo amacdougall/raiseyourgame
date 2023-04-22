@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import { ApolloServer } from '@apollo/server';
 import { GraphQLError } from 'graphql';
 import { startStandaloneServer } from '@apollo/server/standalone';
@@ -5,9 +8,8 @@ import mongoose from 'mongoose';
 
 import Video from './models/video.js'; // no model classes for subdocuments?
 
-// const MONGODB_URI = 'mongodb://root:example@mongodb';
-const MONGODB_URI = 'mongodb://root:example@localhost:27017';
-// TODO: switch based on docker/local?
+const MONGODB_URI = process.env.MONGODB_URI;
+// TODO: ...should it be necessary to select a database?
 
 // TODO: different file
 const typeDefs = `#graphql
