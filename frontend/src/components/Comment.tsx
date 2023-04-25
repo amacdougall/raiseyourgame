@@ -5,10 +5,17 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 
+import { Comment } from '../generated/graphql';
+
+interface CommentViewProps {
+  comment: Comment;
+  editable: boolean;
+}
+
 /**
  * Comment card. Displays when the playhead reaches the comment's timecode.
  */
-const CommentView = ({comment, editable}) => {
+const CommentView = ({comment, editable}: CommentViewProps) => {
   return (
     <Card>
       <CardContent>

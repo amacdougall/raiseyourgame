@@ -12,21 +12,31 @@ import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+import { Video } from '../generated/graphql';
+
 const DISPLAY_DURATION = 5;
+
+interface CommentAddProps {
+  video: Video;
+  playbackTime: number;
+  visible: boolean;
+  onSubmit: () => void;
+  onCancel: () => void;
+}
 
 /**
  * Comment card. Displays when the playhead reaches the comment's timecode.
  */
 const CommentAdd = ({
   video, playbackTime, visible, onSubmit, onCancel
-}) => {
+}: CommentAddProps) => {
   const [content, setContent] = useState('');
-  const formRef = useRef(null);
-  const inputRef = useRef(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const inputRef = useRef<HTMLDivElement>(null);
   const submit = useSubmit();
 
-  const findCommentInput = () => {
-    const textarea = inputRef.current.querySelector("textarea:not([readonly])");
+  const findCommentInput = (): HTMLTextAreaElement => {
+    const textarea = inputRef.current?.querySelector("textarea:not([readonly])") as HTMLTextAreaElement;
     if (textarea) {
       return textarea;
     } else {
@@ -44,7 +54,7 @@ const CommentAdd = ({
    * Perform default newline behavior if Shift, Control, or Commend is held;
    * submit comment form otherwise.
    */
-  const onKeyDown = event => {
+  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     event.stopPropagation(); // limit event to this component
     if (event.key === 'Enter') {
       console.log("CommentAdd.onKeyDown: Enter");

@@ -2,12 +2,16 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 
-const TimelineMarker = ({position}) => {
+interface TimelineMarkerProps {
+  position: number;
+}
+
+const TimelineMarker = ({position}: TimelineMarkerProps) => {
   const theme = useTheme();
   const width = 10;
   const height = 15;
 
-  const points = [
+  const points: Array<[number, number]> = [
     [width / 2, 0], // upper tip
     [width, height / 3], // NE
     [width, height], // SE
@@ -17,7 +21,7 @@ const TimelineMarker = ({position}) => {
   ];
 
   const pointString = points
-    .map(([x, y]) => parseInt(x) + ',' + parseInt(y))
+    .map(([x, y]) => Math.round(x) + ',' + Math.round(y))
     .join(' ');
 
   return (

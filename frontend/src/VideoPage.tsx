@@ -16,6 +16,7 @@ import DebugCommentView from './components/DebugCommentView';
 import GoButton from './components/GoButton';
 import Timeline from './components/Timeline';
 import VideoPlayer from './components/VideoPlayer';
+import { Video } from './generated/graphql';
 
 const COMMENT_STATE = {
   READY: 'READY',
@@ -27,8 +28,13 @@ const COMMENT_STATE = {
  * Page containing video player and comments.
  */
 const VideoPage = () => {
-  const { video } = useLoaderData();
-  const [ player, setPlayer ] = useState(null);
+  /* TODO: If react-router can't support types for this without blindly
+   * optimistic type casting or painful workarounds like:
+   * https://github.com/remix-run/react-router/discussions/9792#discussioncomment-4809811
+   * ...then maybe switch off of it?
+   */
+  const video: Video = useLoaderData() as Video;
+  const [ player, setPlayer ] = useState<YT.Player | null>(null);
   const [ playbackTime, setPlaybackTime ] = useState(0);
   const [ videoDuration, setVideoDuration ] = useState(100);
   const [ commentState, setCommentState ] = useState(COMMENT_STATE.READY);
@@ -36,7 +42,7 @@ const VideoPage = () => {
 
   useEffect(() => {
     // defined within useEffect to get latest state variables
-    const onKeyDown = event => {
+    const onKeyDown = (event: KeyboardEvent) => {
       // cancel PgDn effect of spacebar
       if (event.key === ' ') {
         event.preventDefault();
@@ -51,7 +57,7 @@ const VideoPage = () => {
     return () => document.body.removeEventListener('keydown', onKeyDown);
   }, [commentState]);
 
-  const onReady = ({player}) => {
+  const onReady = (player: YT.Player) => {
     setPlayer(player);
     setVideoDuration(player.getDuration());
   };
@@ -157,7 +163,7 @@ const VideoPage = () => {
         <Grid item xs={12} sx={{marginTop: '5rem'}}>
           <hr />
           <h2>Debug: Comment State: {commentState}</h2>
-          <h2>Debug: active item: {document.activeElement.tagName}</h2>
+          <h2>Debug: active item: {document.activeElement?.tagName}</h2>
           <h2>Debug: All Comments</h2>
           <div>{debugComments}</div>
           <h2>Add a comment</h2>

@@ -3,7 +3,15 @@ import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import TimelineMarker from './TimelineMarker';
 
-const Timeline = ({time, duration, comments}) => {
+import { Comment } from '../generated/graphql';
+
+interface TimelineProps {
+  time: number;
+  duration: number;
+  comments: Comment[];
+}
+
+const Timeline = ({time, duration, comments}: TimelineProps) => {
   const markers = comments.map((comment) => {
     const position = comment.timecode / duration * 100;
     return (

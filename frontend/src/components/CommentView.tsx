@@ -6,12 +6,20 @@ import CardContent from '@mui/material/CardContent';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 
+import { Comment } from '../generated/graphql';
+
+interface CommentViewProps {
+  comment: Comment;
+  editable: boolean;
+  playbackTime: number;
+}
+
 const DISPLAY_DURATION = 5;
 
 /**
  * Comment card. Displays when the playhead reaches the comment's timecode.
  */
-const CommentView = ({comment, editable, playbackTime}) => {
+const CommentView = ({comment, editable, playbackTime}: CommentViewProps) => {
   const visible = (
     playbackTime >= comment.timecode &&
     playbackTime < comment.timecode + DISPLAY_DURATION
@@ -19,13 +27,13 @@ const CommentView = ({comment, editable, playbackTime}) => {
 
   const paragraphs = comment.content.split(/\r?\n/).map((p, n) => {
     return (
-      <Typography key={n} variant="body" component="div">
+      <Typography key={n} variant="body1" component="div">
         {p}
       </Typography>
     );
   });
 
-  const formatTimecode = timecode => {
+  const formatTimecode = (timecode: number) => {
     const minutes = Math.floor(timecode / 60);
     const seconds = Math.floor(timecode % 60);
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
@@ -35,7 +43,7 @@ const CommentView = ({comment, editable, playbackTime}) => {
     <Collapse in={visible} collapsedSize={0} sx={{ width: '90%' }} >
       <Card sx={{marginTop: '1rem'}}>
         <CardContent>
-          <Typography variant="body" component="div">
+          <Typography variant="body1" component="div">
             {paragraphs}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">

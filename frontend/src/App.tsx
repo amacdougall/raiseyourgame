@@ -33,12 +33,14 @@ const router = createBrowserRouter([
       const videoTitle = formData.get('videoTitle') as string;
 
       if (videoUrl !== null && videoTitle !== null) {
-        const { data } = await VideoService.createVideo({
-          url: videoUrl,
-          title: videoTitle
+        const video = await VideoService.createVideo({
+          input: {
+            url: videoUrl,
+            title: videoTitle
+          }
         });
 
-        return redirect(`/video/${data.createVideo.id}`);
+        return redirect(`/video/${video.id}`);
       }
     }
   },
@@ -46,31 +48,36 @@ const router = createBrowserRouter([
     path: '/video/:videoId',
     element: <VideoPage />,
     loader: async ({ params }) => {
-      const { data } = await VideoService.getVideo(params.videoId);
-      return { video: data.video };
+      if (params.videoId === undefined) {
+        throw new Error('/video/:videoId: videoId is undefined');
+      }
+      return await VideoService.getVideo({videoId: params.videoId});
     }
   },
   {
     path: '/video/:videoId/comment',
     element: <VideoPage />,
     action: async ({ params, request }) => {
+      if (params.videoId === undefined) {
+        throw new Error('/video/:videoId/comment: videoId is undefined');
+      }
       const formData = await request.formData();
-      const timecode = parseFloat(formData.get('timecode'));
-      const content = formData.get('content');
+      const timecode = parseFloat(formData.get('timecode') as string); // not UGC
+      const content = formData.get('content') as string; // validated in VideoPage
 
-      const { data } = await VideoService.addComment(
-        params.videoId,
-        {
+      const video = await VideoService.addComment({
+        videoId: params.videoId,
+        input: {
           timecode,
           content,
-          sessionId: localStorage.getItem('sessionId'),
-          token: localStorage.getItem('token'),
-          username: localStorage.getItem('username')
+          sessionId: localStorage.getItem('sessionId') as string,
+          token: localStorage.getItem('token') as string,
+          username: localStorage.getItem('username') as string
         }
-      );
+      });
 
       // don't actually go to this POST url
-      return redirect(`/video/${params.videoId}`);
+      return redirect(`/video/${video.id}`);
     }
   }
 ]);

@@ -1,7 +1,12 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { GET_VIDEO } from '../graphql/queries';
 import { CREATE_VIDEO, ADD_COMMENT } from '../graphql/mutations';
-import { VideoInput } from '../types';
+import {
+  Video,
+  QueryVideoArgs,
+  MutationCreateVideoArgs,
+  MutationAddCommentArgs
+} from '../generated/graphql';
 
 const client = new ApolloClient({
   uri: import.meta.env.VITE_GRAPHQL_URI,
@@ -9,39 +14,34 @@ const client = new ApolloClient({
 });
 
 export default class VideoService {
-  static async getVideo(videoId: string) {
+  /* NOTE: see queries/mutations files for return values; Apollo may call it
+   * response.data.<nameOfMutation>, but the actual value of that key is the
+   * video data.
+   */
+  static async getVideo(args: QueryVideoArgs): Promise<Video> {
     const response = await client.query({
       query: GET_VIDEO,
-      variables: {
-        videoId,
-      },
+      variables: args
     });
 
-    // TODO: convert watch link to embed link if needed
-
-    return response;
+    return response.data.video;
   }
 
-  static async createVideo(videoInput: VideoInput) {
+  static async createVideo(args: MutationCreateVideoArgs): Promise<Video> {
     const response = await client.mutate({
       mutation: CREATE_VIDEO,
-      variables: {
-        input: videoInput,
-      }
+      variables: args
     });
 
-    return response;
+    return response.data.createVideo;
   }
 
-  static async addComment(videoId: string, commentInput: CommentInput) {
+  static async addComment(args: MutationAddCommentArgs): Promise<Video> {
     const response = await client.mutate({
       mutation: ADD_COMMENT,
-      variables: {
-        videoId,
-        input: commentInput,
-      }
+      variables: args
     });
 
-    return response;
+    return response.data.addComment;
   }
 }

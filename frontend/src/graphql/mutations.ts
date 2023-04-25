@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const CREATE_VIDEO = gql`
-  mutation Mutation($input: VideoInput!) {
+  mutation CreateVideoMutation($input: VideoInput!) {
     createVideo(input: $input) {
       id
       title
@@ -20,7 +20,7 @@ export const CREATE_VIDEO = gql`
 `;
 
 export const ADD_COMMENT = gql`
-  mutation Mutation($videoId: ID!, $input: CommentInput!) {
+  mutation AddCommentMutation($videoId: ID!, $input: CommentInput!) {
     addComment(videoId: $videoId, input: $input) {
       id
       title

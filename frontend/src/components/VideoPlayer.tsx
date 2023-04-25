@@ -3,8 +3,27 @@ import { useState } from 'react';
 import YouTube from 'react-youtube';
 import useInterval from '../hooks/useInterval';
 
+import { Video } from '../generated/graphql';
+
+interface OnProgressArguments {
+  time: number;
+  duration: number;
+}
+
+interface VideoPlayerProps {
+  video: Video;
+  onReady: (player: YT.Player) => void;
+  onPlay: () => void;
+  onPause: () => void;
+  onEnd: () => void;
+  onProgress: ({time, duration}: OnProgressArguments) => void;
+  onPlayerFocus: () => void;
+  onPlayerFocusOut: () => void;
+}
+
+
 // NOTE: I tried installing @types/youtube and referencing it in tsconfig.json,
-// but it didn't work and I didn't want to get bogged down on the topic.
+// but it didn't supply the YT.PlayerState enum; I tapped out for now.
 const PlayerState = {
   UNSTARTED: -1,
   ENDED: 0,
@@ -13,6 +32,7 @@ const PlayerState = {
   BUFFERING: 3,
   CUED: 5
 };
+
 
 /**
  * VideoPlayer for YouTube videos. Accepts YouTube video ID.
@@ -34,14 +54,17 @@ const PlayerState = {
 const VideoPlayer = ({
   video, onReady, onPlay, onPause, onEnd, onProgress,
   onPlayerFocus, onPlayerFocusOut
-}) => {
-  const [ player, setPlayer ] = useState(null);
-  const [ activeElement, setActiveElement ] = useState(null);
-  const [ playerState, setPlayerState ] = useState(null);
+}: VideoPlayerProps) => {
+  const [ player, setPlayer ] = useState<YT.Player | null>(null);
+  const [ activeElement, setActiveElement ] = useState<Element | null>(null);
+  const [ playerState, setPlayerState ] = useState<YT.PlayerState>(PlayerState.UNSTARTED);
   const [ progressInterval, setProgressInterval ] = useState(null);
 
   useInterval(() => {
-    onProgress({
+    if (player === null) {
+      return;
+    };
+    player && onProgress({
       time: player.getCurrentTime(),
       duration: player.getDuration()
     });
@@ -59,7 +82,7 @@ const VideoPlayer = ({
     }
   }, player ? 1000 : null); // TODO: a bit faster
 
-  const onStateChange = event => setPlayerState(event.data);
+  const onStateChange = (event: YT.OnStateChangeEvent) => setPlayerState(event.data);
 
   // has to be included in both style and opts; not sure why
   const videoDimensions = { width: '100%', height: '100%' };
@@ -81,7 +104,7 @@ const VideoPlayer = ({
         }}
         onReady={event => {
           setPlayer(event.target);
-          onReady({player: event.target});
+          onReady(event.target);
         }}
         onPlay={onPlay}
         onPause={onPause}

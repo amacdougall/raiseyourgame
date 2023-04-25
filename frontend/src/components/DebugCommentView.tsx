@@ -1,10 +1,15 @@
 import React from 'react';
-// import { Comment } from './types';
+import { Comment } from '../generated/graphql';
+
+interface DebugCommentViewProps {
+  comment: Comment;
+  editable: boolean;
+}
 
 /**
  * Plain comment view for debugging.
  */
-const DebugCommentView = ({comment, editable}) => {
+const DebugCommentView = ({comment, editable}: DebugCommentViewProps) => {
   return (
     <div>
       <p>{comment.content}</p>

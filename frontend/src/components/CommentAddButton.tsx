@@ -5,10 +5,15 @@ import Collapse from '@mui/material/Collapse';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
+interface CommentAddButtonProps {
+  visible: boolean;
+  onClick: () => void;
+}
+
 /**
  * 
  */
-const CommentAddButton = ({visible, onClick}) => {
+const CommentAddButton = ({visible, onClick}: CommentAddButtonProps) => {
   return (
     <Collapse in={visible} collapsedSize={0}>
       <Button onClick={onClick} variant="contained">
