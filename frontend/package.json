@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "codegen": "graphql-codegen --config codegen.ts",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
@@ -24,10 +25,12 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^3.3.1",
+    "@graphql-codegen/client-preset": "^3.0.1",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react": "^3.1.0",
-    "typescript": "^4.9.3",
+    "typescript": "^4.9.5",
     "vite": "^4.2.0"
   }
 }
