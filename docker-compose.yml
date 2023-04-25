@@ -6,6 +6,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: frontend
+      # TODO: configure this if I need to develop live on the Docker instance
       # volumes:
       #   - /app/node_modules
       #   - ./frontend:/app
@@ -58,8 +59,6 @@ services:
       - "443:443"
     volumes:
       - nginxdata:/var/log/nginx
-    depends_on:
-      - nodejs-server
     networks:
       - frontend
 
