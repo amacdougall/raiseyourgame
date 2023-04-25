@@ -1,0 +1,48 @@
+type Video {
+  id: ID!
+  title: String!
+  youTubeId: String!
+  comments: [Comment!]
+  createdAt: String!
+}
+
+input VideoInput {
+  title: String!
+  url: String!
+}
+
+type Comment {
+  id: ID!
+  timecode: Float!
+  content: String!
+  sessionId: String!
+  username: String!
+  token: String!
+  createdAt: String!
+}
+
+input CommentInput {
+  timecode: Float!
+  content: String!
+  sessionId: String!
+  token: String!
+  username: String!
+}
+
+input UpdateCommentInput {
+  content: String!
+  token: String!
+}
+
+type Query {
+  videos: [Video]
+  video(videoId: ID!): Video
+}
+
+type Mutation {
+  createVideo(input: VideoInput!): Video
+
+  addComment(videoId: ID!, input: CommentInput!): Video
+  updateComment(videoId: ID!, commentId: ID!, input: UpdateCommentInput!): Video
+  deleteComment(videoId: ID!, commentId: ID!): Video
+}

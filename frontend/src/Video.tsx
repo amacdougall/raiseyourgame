@@ -24,7 +24,7 @@ const COMMENT_STATE = {
 };
 
 /**
- * Page containing video player, comments, and replies.
+ * Page containing video player and comments.
  */
 const Video = () => {
   const { video } = useLoaderData();

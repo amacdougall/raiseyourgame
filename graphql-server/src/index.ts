@@ -6,105 +6,50 @@ import { GraphQLError } from 'graphql';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import mongoose from 'mongoose';
 
-import Video from './models/video.js'; // no model classes for subdocuments?
+import { readFileSync } from 'fs';
+const typeDefs = readFileSync('./src/schema.graphql', {encoding: 'utf8'});
+
+import VideoModel from './models/VideoModel.js';
+import {
+  Video,
+  Comment,
+  Resolvers,
+  QueryVideoArgs,
+  MutationCreateVideoArgs,
+  MutationAddCommentArgs,
+  MutationUpdateCommentArgs
+} from './generated/graphql';
+import { videoModelToGraphQL } from './utils/typeConversions.js';
 
 const MONGODB_URI = process.env.MONGODB_URI;
+if (MONGODB_URI === undefined) {
+  throw new Error('MONGODB_URI is not defined; cannot start server');
+}
 // TODO: ...should it be necessary to select a database?
-
-// TODO: different file
-const typeDefs = `#graphql
-  type Video {
-    id: ID!
-    title: String!
-    youTubeId: String!
-    comments: [Comment!]
-    createdAt: String!
-  }
-
-  input VideoInput {
-    title: String!
-    url: String!
-  }
-
-  type Comment {
-    id: ID!
-    timecode: Float!
-    content: String!
-    sessionId: String!
-    username: String!
-    token: String!
-    replies: [Reply!]
-    createdAt: String!
-  }
-
-  input CommentInput {
-    timecode: Float!
-    content: String!
-    sessionId: String!
-    token: String!
-    username: String!
-  }
-
-  input UpdateCommentInput {
-    content: String!
-    token: String!
-  }
-
-  type Reply {
-    id: ID!
-    content: String!
-    sessionId: String!
-    token: String!
-    username: String!
-    createdAt: String!
-  }
-
-  input ReplyInput {
-    content: String!
-    sessionId: String!
-    token: String!
-    username: String!
-  }
-
-  input UpdateReplyInput {
-    content: String!
-    token: String!
-  }
-
-  type Query {
-    videos: [Video]
-    video(videoId: ID!): Video
-  }
-
-  type Mutation {
-    createVideo(input: VideoInput!): Video
-
-    addComment(videoId: ID!, input: CommentInput!): Video
-    updateComment(videoId: ID!, commentId: ID!, input: UpdateCommentInput!): Video
-    deleteComment(videoId: ID!, commentId: ID!): Video
-
-    addReply(videoId: ID!, commentId: ID!, input: ReplyInput!): Video
-    updateReply(videoId: ID!, commentId: ID!, replyId: ID!, input: UpdateReplyInput!): Video
-    deleteReply(videoId: ID!, commentId: ID!, replyId: ID!): Video
-  }
-`;
 
 // TODO: put resolvers in a different file
 const resolvers = {
   Query: {
-    videos: async () => {
-      return await Video.find({});
+    videos: async (): Promise<Video[]> => {
+      const videoModels = await VideoModel.find({});
+      return videoModels.map(videoModelToGraphQL);
     },
 
-    video: async (_, { videoId }) => {
-      return await Video.findById(videoId);
+    video: async (_: Video, { videoId }: QueryVideoArgs): Promise<Video> => {
+      const videoModel = await VideoModel.findById(videoId);
+      if (videoModel === null) {
+        throw new GraphQLError('Video not found', {
+          extensions: { code: 'VIDEO_NOT_FOUND' }
+        });
+      }
+      return videoModelToGraphQL(videoModel);
     }
   },
 
   Mutation: {
-    createVideo: async (_, { input: { title, url }}) => {
+    createVideo: async (_: Video, { input: { title, url }}: MutationCreateVideoArgs) => {
       // extract YouTube video id from url
-      let youTubeId = '';
+      let youTubeId: string | null = '';
       if (url.indexOf('youtube.com/watch?v=') !== -1) {
         const urlObject = new URL(url);
         youTubeId = urlObject.searchParams.get('v');
@@ -113,13 +58,15 @@ const resolvers = {
         youTubeId = urlObject.pathname.split('/')[1].split('?')[0].split('#')[0];
       } else if (url.indexOf('youtube.com/embed/') !== -1) {
         youTubeId = url.split('/embed/')[1].split('?')[0].split('#')[0];
-      } else {
+      }
+
+      if (youTubeId === null) {
         throw new GraphQLError('Invalid YouTube URL', {
           extensions: { code: 'INVALID_YOUTUBE_URL' }
         });
       }
 
-      const video = new Video({
+      const video = new VideoModel({
         title,
         youTubeId,
         createdAt: new Date().toISOString()
@@ -128,11 +75,16 @@ const resolvers = {
       return video;
     },
 
-    addComment: async (_, {
+    addComment: async (_: Video, {
       videoId,
       input: { timecode, content, sessionId, token, username }
-    }) => {
-      const video = await Video.findById(videoId);
+    }: MutationAddCommentArgs) => {
+      const video = await VideoModel.findById(videoId);
+      if (video === null) {
+        throw new GraphQLError('Video not found', {
+          extensions: { code: 'VIDEO_NOT_FOUND' }
+        });
+      }
       video.comments.push({
         timecode, content, sessionId, token, username,
         createdAt: new Date().toISOString()
@@ -141,9 +93,23 @@ const resolvers = {
       return video;
     },
 
-    updateComment: async (_, { videoId, commentId, input: { content, token } }) => {
-      const video = await Video.findById(videoId);
-      const comment = video.comments.id(commentId);
+    updateComment: async (_: Video, {
+      videoId,
+      commentId,
+      input: { content, token }
+    }: MutationUpdateCommentArgs) => {
+      const video = await VideoModel.findById(videoId);
+      if (video === null) {
+        throw new GraphQLError('Video not found', {
+          extensions: { code: 'VIDEO_NOT_FOUND' }
+        });
+      }
+      const comment = video.comments.find(comment => comment._id?.toString() === commentId);
+      if (comment === undefined) {
+        throw new GraphQLError('Comment not found', {
+          extensions: { code: 'COMMENT_NOT_FOUND' }
+        });
+      }
       if (comment.token !== token) {
         throw new GraphQLError('Unauthorized', {
           extensions: { code: 'UNAUTHORIZED' }

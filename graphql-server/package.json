@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "compile": "tsc",
-    "start": "npm run compile && node ./dist/index.js",
-    "debug": "npm run compile && node --inspect ./dist/index.js"
+    "start": "npm run compile && node ./dist/src/index.js",
+    "debug": "npm run compile && node --inspect ./dist/src/index.js",
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +20,9 @@
     "mongoose": "^7.0.3"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "3.3.1",
+    "@graphql-codegen/typescript": "3.0.4",
+    "@graphql-codegen/typescript-resolvers": "3.2.1",
     "@types/node": "^18.15.11",
     "typescript": "^5.0.3"
   }

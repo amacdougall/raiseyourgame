@@ -14,13 +14,6 @@ export const GET_VIDEO = gql`
         sessionId
         username
         createdAt
-        replies {
-          id
-          content
-          sessionId
-          username
-          createdAt
-        }
       }
     }
   }

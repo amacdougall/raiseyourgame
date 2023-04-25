@@ -14,13 +14,6 @@ export const CREATE_VIDEO = gql`
         sessionId
         username
         createdAt
-        replies {
-          id
-          content
-          sessionId
-          username
-          createdAt
-        }
       }
     }
   }
@@ -40,13 +33,6 @@ export const ADD_COMMENT = gql`
         sessionId
         username
         createdAt
-        replies {
-          id
-          content
-          sessionId
-          username
-          createdAt
-        }
       }
     }
   }

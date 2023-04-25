@@ -29,15 +29,17 @@ const router = createBrowserRouter([
     element: <Home />,
     action: async ({ request }) => {
       const formData = await request.formData();
-      const videoUrl = formData.get('videoUrl');
-      const videoTitle = formData.get('videoTitle');
+      const videoUrl = formData.get('videoUrl') as string;
+      const videoTitle = formData.get('videoTitle') as string;
 
-      const { data } = await VideoService.createVideo({
-        url: videoUrl,
-        title: videoTitle
-      });
+      if (videoUrl !== null && videoTitle !== null) {
+        const { data } = await VideoService.createVideo({
+          url: videoUrl,
+          title: videoTitle
+        });
 
-      return redirect(`/video/${data.createVideo.id}`);
+        return redirect(`/video/${data.createVideo.id}`);
+      }
     }
   },
   {
