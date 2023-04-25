@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider, redirect } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid';
 
 import Home from './Home';
-import Video from './Video';
+import VideoPage from './VideoPage';
 import VideoService from './services/VideoService';
 
 if (localStorage.getItem('sessionId') === null) {
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/video/:videoId',
-    element: <Video />,
+    element: <VideoPage />,
     loader: async ({ params }) => {
       const { data } = await VideoService.getVideo(params.videoId);
       return { video: data.video };
@@ -52,7 +52,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/video/:videoId/comment',
-    element: <Video />,
+    element: <VideoPage />,
     action: async ({ params, request }) => {
       const formData = await request.formData();
       const timecode = parseFloat(formData.get('timecode'));

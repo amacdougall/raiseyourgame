@@ -26,7 +26,7 @@ const COMMENT_STATE = {
 /**
  * Page containing video player and comments.
  */
-const Video = () => {
+const VideoPage = () => {
   const { video } = useLoaderData();
   const [ player, setPlayer ] = useState(null);
   const [ playbackTime, setPlaybackTime ] = useState(0);
@@ -179,4 +179,4 @@ const Video = () => {
   );
 };
 
-export default Video;
+export default VideoPage;
