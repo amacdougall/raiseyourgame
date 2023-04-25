@@ -3,8 +3,8 @@ FROM node:18.15-alpine
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
 COPY . .
+RUN npm install
+RUN cp .env.production .env
 
-# TODO: different commands in prod
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]

@@ -4,7 +4,7 @@ import { CREATE_VIDEO, ADD_COMMENT } from '../graphql/mutations';
 import { VideoInput } from '../types';
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/graphql', // TODO: switch based on docker/local?
+  uri: import.meta.env.VITE_GRAPHQL_URI,
   cache: new InMemoryCache(),
 });
 

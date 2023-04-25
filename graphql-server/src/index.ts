@@ -158,7 +158,7 @@ const resolvers = {
 
 mongoose.connect(MONGODB_URI)
   .then(() => console.log('Apollo connected to MongoDB!'))
-  .catch(err => console.log(`Apollo failed to connect to MongoDB: ${err.message}`));
+  .catch(err => console.log(`Apollo failed to connect to MongoDB on ${MONGODB_URI}: ${err.message}`));
 
 const server = new ApolloServer({ typeDefs, resolvers });
 
