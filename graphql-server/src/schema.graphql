@@ -2,7 +2,7 @@ type Video {
   id: ID!
   title: String!
   youTubeId: String!
-  comments: [Comment!]
+  comments: [Comment!]!
   createdAt: String!
 }
 

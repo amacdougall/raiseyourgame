@@ -16,9 +16,9 @@ export type Scalars = {
 
 export type Comment = {
   __typename?: 'Comment';
-  id: Scalars['ID'];
   content: Scalars['String'];
   createdAt: Scalars['String'];
+  id: Scalars['ID'];
   sessionId: Scalars['String'];
   timecode: Scalars['Float'];
   token: Scalars['String'];
@@ -83,9 +83,9 @@ export type UpdateCommentInput = {
 
 export type Video = {
   __typename?: 'Video';
-  id: Scalars['ID'];
-  comments?: Maybe<Array<Comment>>;
+  comments: Array<Maybe<Comment>>;
   createdAt: Scalars['String'];
+  id: Scalars['ID'];
   title: Scalars['String'];
   youTubeId: Scalars['String'];
 };
@@ -195,9 +195,9 @@ export type ResolversParentTypes = {
 };
 
 export type CommentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   sessionId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   timecode?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -218,9 +218,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type VideoResolvers<ContextType = any, ParentType extends ResolversParentTypes['Video'] = ResolversParentTypes['Video']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  comments?: Resolver<Maybe<Array<ResolversTypes['Comment']>>, ParentType, ContextType>;
+  comments?: Resolver<Array<Maybe<ResolversTypes['Comment']>>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   youTubeId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
