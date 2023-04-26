@@ -1,7 +1,6 @@
 services:
   frontend:
     profiles: ["frontend"]
-    stdin_open: true
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -10,6 +9,10 @@ services:
       # volumes:
       #   - /app/node_modules
       #   - ./frontend:/app
+    ports:
+      - "80:80"
+      - "443:443"
+    # TODO: nginx log volume?
     networks:
       - frontend
   graphql-server:
@@ -42,25 +45,6 @@ services:
       - mongodbdata:/data/db
     networks:
       - backend
-  webserver:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    image: digitalocean.com/webserver:latest
-    container_name: webserver
-    restart: unless-stopped
-    environment:
-      APP_ENV: "prod"
-      APP_NAME: "webserver"
-      APP_DEBUG: "false"
-      SERVICE_NAME: "webserver"
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - nginxdata:/var/log/nginx
-    networks:
-      - frontend
 
 networks:
   frontend:
@@ -70,8 +54,6 @@ networks:
 
 volumes:
   mongodbdata:
-    driver: local
-  appdata:
     driver: local
   nginxdata:
     driver: local
