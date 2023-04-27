@@ -1,3 +1,7 @@
+# NOTE: frontend/nginx and certbot services run long sleep loops to maintain
+# the LetsEncrypt certificates from certbot. The certificates expire every
+# three months, so I figured a cert refresh every day would be more than
+# sufficient.
 services:
   frontend:
     profiles: ["frontend"]
@@ -6,6 +10,8 @@ services:
       dockerfile: Dockerfile
     container_name: frontend
     restart: unless-stopped
+    # command snippet from https://pentacent.medium.com/nginx-and-lets-encrypt-with-docker-in-less-than-5-minutes-b4b8a60d3a71
+    command: "/bin/sh -c 'while :; do sleep 24h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     volumes:
       - ./certbot/www/:/var/www/certbot # read challenge files from certbot
       - ./certbot/conf/:/etc/letsencrypt # read actual certs
@@ -57,6 +63,8 @@ services:
     # sudo docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ -d raiseyourga.me
     profiles: ["certbot"]
     image: certbot/certbot:latest
+    # entrypoint snippet from https://pentacent.medium.com/nginx-and-lets-encrypt-with-docker-in-less-than-5-minutes-b4b8a60d3a71
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 168h & wait $${!}; done;'"
     volumes:
       - ./certbot/www/:/var/www/certbot # write challenge files for nginx
       - ./certbot/conf/:/etc/letsencrypt # write actual certs
