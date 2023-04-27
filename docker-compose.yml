@@ -5,14 +5,17 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: frontend
+    restart: unless-stopped
+    volumes:
+      - ./certbot/www/:/var/www/certbot # read challenge files from certbot
+      - ./certbot/conf/:/etc/letsencrypt # read actual certs
+      # TODO: nginx log volume?
       # TODO: configure this if I need to develop live on the Docker instance
-      # volumes:
       #   - /app/node_modules
       #   - ./frontend:/app
     ports:
       - "80:80"
       - "443:443"
-    # TODO: nginx log volume?
     networks:
       - frontend
   graphql-server:
@@ -45,6 +48,18 @@ services:
       - mongodbdata:/data/db
     networks:
       - backend
+  # LetsEncrypt certbot; certbot.eff.org
+  certbot:
+    # In this context, certbot can't configure nginx directly, so no point
+    # running it as a service. Instead, while the frontend server is running,
+    # run the certonly command to write the updated certificates:
+    #
+    # sudo docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ -d raiseyourga.me
+    profiles: ["certbot"]
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot # write challenge files for nginx
+      - ./certbot/conf/:/etc/letsencrypt # write actual certs
 
 networks:
   frontend:
