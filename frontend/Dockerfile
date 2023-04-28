@@ -16,7 +16,6 @@ RUN npm run build
 # build backend
 FROM nginx:alpine
 
-COPY --from=build /app/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/entrypoint.sh /entrypoint.sh
+COPY --from=build /app/nginx/default.conf.template /etc/nginx/conf.d
 COPY --from=build /app/dist /usr/share/nginx/html
-
-ENTRYPOINT ["nginx", "-g", "daemon off;"]

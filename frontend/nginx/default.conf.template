@@ -1,0 +1,53 @@
+# will be enclosed in http { ... } block by nginx
+
+server {
+  listen 80;
+  listen [::]:80;
+
+  server_name ${SERVER_NAME};
+
+  # for LetsEncrypt Certbot
+  location /.well-known/acme-challenge/ {
+    root /var/www/certbot;
+  }
+
+  location / {
+    return 301 https://$host$request_uri; # redirect to https
+  }
+}
+
+server {
+  listen 443 ssl;
+  listen [::]:443 ssl;
+
+  server_name ${SERVER_NAME};
+
+  # ssl_certificate /etc/letsencrypt/live/raiseyourga.me/fullchain.pem;
+  # ssl_certificate_key /etc/letsencrypt/live/raiseyourga.me/privkey.pem;
+  ssl_certificate ${SSL_CERTIFICATE};
+  ssl_certificate_key ${SSL_CERTIFICATE_KEY};
+
+  location /graphql {
+    # Use Docker DNS resolver to handle domains like 'graphql-server'.
+    resolver 127.0.0.11; # docker DNS resolver
+
+    rewrite /graphql/(.*) /$1 break;
+
+    # This variable dance stops nginx from trying to find graphql-server at
+    # startup, which fails if it's not up yet.
+    set $upstream "graphql-server:4000";
+    proxy_pass http://$upstream; # internal network, no need for ssl
+
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  # serve static HTML; Dockerfile should copy from frontend dist folder
+  location / {
+    root /usr/share/nginx/html;
+    index index.html;
+    try_files $uri $uri/ /index.html; # redirect to index.html if not found
+  }
+}

@@ -18,6 +18,12 @@ services:
       - "443:443"
     networks:
       - frontend
+    environment:
+      - SERVER_NAME=$SERVER_NAME
+      - SSL_CERTIFICATE=$SSL_CERTIFICATE
+      - SSL_CERTIFICATE_KEY=$SSL_CERTIFICATE_KEY
+    entrypoint: ["/entrypoint.sh"]
+    command: ["nginx", "-g", "daemon off;"]
   graphql-server:
     profiles: ["graphql-server"]
     build:
