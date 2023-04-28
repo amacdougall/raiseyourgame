@@ -1,7 +1,3 @@
-# NOTE: frontend/nginx and certbot services run long sleep loops to maintain
-# the LetsEncrypt certificates from certbot. The certificates expire every
-# three months, so I figured a cert refresh every day would be more than
-# sufficient.
 services:
   frontend:
     profiles: ["frontend"]
