@@ -13,8 +13,6 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  mutation CreateVideoMutation($input: VideoInput!) {\n    createVideo(input: $input) {\n      id\n      title\n      youTubeId\n      createdAt\n      comments {\n        id\n        timecode\n        content\n        sessionId\n        username\n        createdAt\n      }\n    }\n  }\n": types.CreateVideoMutationDocument,
-    "\n  mutation AddCommentMutation($videoId: ID!, $input: CommentInput!) {\n    addComment(videoId: $videoId, input: $input) {\n      id\n      title\n      youTubeId\n      createdAt\n      comments {\n        id\n        timecode\n        content\n        sessionId\n        username\n        createdAt\n      }\n    }\n  }\n": types.AddCommentMutationDocument,
     "\n  query Query($videoId: ID!) {\n    video(videoId: $videoId) {\n      id\n      title\n      youTubeId\n      createdAt\n      comments {\n        id\n        timecode\n        content\n        sessionId\n        username\n        createdAt\n      }\n    }\n  }\n": types.QueryDocument,
 };
 
@@ -32,14 +30,6 @@ const documents = {
  */
 export function gql(source: string): unknown;
 
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(source: "\n  mutation CreateVideoMutation($input: VideoInput!) {\n    createVideo(input: $input) {\n      id\n      title\n      youTubeId\n      createdAt\n      comments {\n        id\n        timecode\n        content\n        sessionId\n        username\n        createdAt\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation CreateVideoMutation($input: VideoInput!) {\n    createVideo(input: $input) {\n      id\n      title\n      youTubeId\n      createdAt\n      comments {\n        id\n        timecode\n        content\n        sessionId\n        username\n        createdAt\n      }\n    }\n  }\n"];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(source: "\n  mutation AddCommentMutation($videoId: ID!, $input: CommentInput!) {\n    addComment(videoId: $videoId, input: $input) {\n      id\n      title\n      youTubeId\n      createdAt\n      comments {\n        id\n        timecode\n        content\n        sessionId\n        username\n        createdAt\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation AddCommentMutation($videoId: ID!, $input: CommentInput!) {\n    addComment(videoId: $videoId, input: $input) {\n      id\n      title\n      youTubeId\n      createdAt\n      comments {\n        id\n        timecode\n        content\n        sessionId\n        username\n        createdAt\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

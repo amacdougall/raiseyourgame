@@ -76,8 +76,34 @@ const router = createBrowserRouter([
         }
       });
 
-      // don't actually go to this POST url
+      /* Don't actually go to this POST url; instead, reload video page. The
+       * Apollo client cache ensures that the /video/:videoId page loader will
+       * return instantly.
+       */
       return redirect(`/video/${video.id}`);
+    }
+  },
+  {
+    path: '/video/:videoId/comment/:commentId',
+    element: <VideoPage />,
+    action: async ({ params, request }) => {
+      if (params.videoId === undefined) {
+        throw new Error('/video/:videoId/comment/:commentId: videoId is undefined');
+      } else if (params.commentId === undefined) {
+        throw new Error('/video/:videoId/comment/:commentId: commentId is undefined');
+      }
+
+      if (request.method === 'DELETE') {
+        const video = await VideoService.deleteComment({
+          videoId: params.videoId,
+          commentId: params.commentId,
+          input: {
+            token: localStorage.getItem('token') as string
+          }
+        });
+      }
+
+      return redirect(`/video/${params.videoId}`);
     }
   }
 ]);

@@ -1,11 +1,12 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { GET_VIDEO } from '../graphql/queries';
-import { CREATE_VIDEO, ADD_COMMENT } from '../graphql/mutations';
+import { CREATE_VIDEO, ADD_COMMENT, DELETE_COMMENT } from '../graphql/mutations';
 import {
   Video,
   QueryVideoArgs,
   MutationCreateVideoArgs,
-  MutationAddCommentArgs
+  MutationAddCommentArgs,
+  MutationDeleteCommentArgs
 } from '../generated/graphql';
 
 const client = new ApolloClient({
@@ -43,5 +44,14 @@ export default class VideoService {
     });
 
     return response.data.addComment;
+  }
+
+  static async deleteComment(args: MutationDeleteCommentArgs): Promise<Video> {
+    const response = await client.mutate({
+      mutation: DELETE_COMMENT,
+      variables: args
+    });
+
+    return response.data.deleteComment;
   }
 }

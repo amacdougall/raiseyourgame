@@ -1,14 +1,17 @@
 import React from 'react';
+import { Form } from 'react-router-dom';
+
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
+import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import { Comment } from '../generated/graphql';
+import { Video, Comment } from '../generated/graphql';
 
 interface CommentViewProps {
+  video: Video;
   comment: Comment;
   editable: boolean;
   playbackTime: number;
@@ -19,7 +22,7 @@ const DISPLAY_DURATION = 5;
 /**
  * Comment card. Displays when the playhead reaches the comment's timecode.
  */
-const CommentView = ({comment, editable, playbackTime}: CommentViewProps) => {
+const CommentView = ({video, comment, editable, playbackTime}: CommentViewProps) => {
   const visible = (
     playbackTime >= comment.timecode &&
     playbackTime < comment.timecode + DISPLAY_DURATION
@@ -41,21 +44,33 @@ const CommentView = ({comment, editable, playbackTime}: CommentViewProps) => {
 
   return (
     <Collapse in={visible} collapsedSize={0} sx={{ width: '90%' }} >
-      <Card sx={{marginTop: '1rem'}}>
-        <CardContent>
-          {paragraphs}
-          <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            <strong>{comment.username}</strong> at {formatTimecode(comment.timecode)}
-          </Typography>
-        </CardContent>
-        { editable ?
-          <CardActions disableSpacing>
-            <Button size="small">Edit</Button>
-            <Button size="small">Delete</Button>
-          </CardActions>
-          : null
-        }
-      </Card>
+      <Paper sx={{
+        marginTop: '1rem',
+        padding: '0rem 1rem',
+      }}>
+        <Stack direction="row" sx={{marginTop: '1rem'}}>
+          <Stack>
+            {paragraphs}
+            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+              <strong>{comment.username}</strong> at {formatTimecode(comment.timecode)}
+            </Typography>
+          </Stack>
+          { editable ?
+            <Box sx={{ marginLeft: 'auto' }}>
+              <Form
+                name="deleteComment"
+                action={`/video/${video.id}/comment/${comment.id}`}
+                method="delete"
+              >
+                <Button type="submit" size="small">
+                  Delete
+                </Button>
+              </Form>
+            </Box>
+            : null
+          }
+        </Stack>
+      </Paper>
     </Collapse>
   );
 };

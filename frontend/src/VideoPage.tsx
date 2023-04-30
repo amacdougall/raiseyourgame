@@ -108,6 +108,7 @@ const VideoPage = () => {
     return (
       <CommentView
         key={comment.id}
+        video={video}
         comment={comment}
         editable={editable}
         playbackTime={playbackTime}

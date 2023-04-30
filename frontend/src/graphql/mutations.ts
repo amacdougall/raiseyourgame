@@ -37,3 +37,23 @@ export const ADD_COMMENT = gql`
     }
   }
 `;
+
+export const DELETE_COMMENT = gql`
+  mutation DeleteComment($videoId: ID!, $commentId: ID!, $input: DeleteCommentInput!) {
+    deleteComment(videoId: $videoId, commentId: $commentId, input: $input) {
+      id
+      title
+      youTubeId
+      comments {
+        id
+        timecode
+        content
+        sessionId
+        username
+        token
+        createdAt
+      }
+      createdAt
+    }
+  }
+`;
