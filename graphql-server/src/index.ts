@@ -5,19 +5,24 @@ import { ApolloServer } from '@apollo/server';
 import { GraphQLError } from 'graphql';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import mongoose from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
 import { readFileSync } from 'fs';
 const typeDefs = readFileSync('./src/schema.graphql', {encoding: 'utf8'});
 
 import VideoModel from './models/VideoModel.js';
+import { VideoInterface } from './models/VideoModel.js';
 import {
   Video,
   Comment,
   Resolvers,
+  VideoInput,
+  CommentInput,
+  DeleteCommentInput,
   QueryVideoArgs,
   MutationCreateVideoArgs,
   MutationAddCommentArgs,
-  MutationUpdateCommentArgs
+  MutationDeleteCommentArgs,
 } from './generated/graphql';
 import { videoModelToGraphQL } from './utils/typeConversions.js';
 
@@ -47,7 +52,10 @@ const resolvers = {
   },
 
   Mutation: {
-    createVideo: async (_: Video, { input: { title, url }}: MutationCreateVideoArgs) => {
+    createVideo: async (
+      _: Video,
+      { input: { title, url } }: MutationCreateVideoArgs
+    ): Promise<Video> => {
       // extract YouTube video id from url
       let youTubeId: string | null = '';
       if (url.indexOf('youtube.com/watch?v=') !== -1) {
@@ -72,13 +80,10 @@ const resolvers = {
         createdAt: new Date().toISOString()
       });
       await video.save();
-      return video;
+      return videoModelToGraphQL(video);
     },
 
-    addComment: async (_: Video, {
-      videoId,
-      input: { timecode, content, sessionId, token, username }
-    }: MutationAddCommentArgs) => {
+    addComment: async (_: Video, { videoId, input }: MutationAddCommentArgs) => {
       const video = await VideoModel.findById(videoId);
       if (video === null) {
         throw new GraphQLError('Video not found', {

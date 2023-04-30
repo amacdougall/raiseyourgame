@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, Types, Model, model } from 'mongoose';
 
 interface CommentInterface {
   _id?: string;
@@ -27,13 +27,24 @@ const commentSchema = new Schema<CommentInterface>({
   createdAt: String
 });
 
-const videoSchema = new Schema<VideoInterface>({
-  title: String,
-  youTubeId: String,
-  createdAt: String,
-  comments: [commentSchema]
-});
+// NOTE: https://mongoosejs.com/docs/typescript/subdocuments.html 
+// Without this complex type dance, video.comments will not have mongoose
+// methods like .id and .deleteOne. (ORMs can be more trouble than they're
+// worth, exhibit seven million.)
+type VideoDocumentProps = {
+  comments: Types.DocumentArray<CommentInterface>;
+};
 
-const VideoModel = model<VideoInterface>('Video', videoSchema);
+type VideoModelType = Model<VideoInterface, {}, VideoDocumentProps>;
+
+const VideoModel = model<VideoInterface, VideoModelType>(
+  'Video',
+  new Schema<VideoInterface, VideoModelType>({
+    title: String,
+    youTubeId: String,
+    createdAt: String,
+    comments: [commentSchema]
+  })
+);
 
 export default VideoModel;

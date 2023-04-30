@@ -33,6 +33,10 @@ export type CommentInput = {
   username: Scalars['String'];
 };
 
+export type DeleteCommentInput = {
+  token: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addComment?: Maybe<Video>;
@@ -55,6 +59,7 @@ export type MutationCreateVideoArgs = {
 
 export type MutationDeleteCommentArgs = {
   commentId: Scalars['ID'];
+  input: DeleteCommentInput;
   videoId: Scalars['ID'];
 };
 
@@ -83,7 +88,7 @@ export type UpdateCommentInput = {
 
 export type Video = {
   __typename?: 'Video';
-  comments: Array<Maybe<Comment>>;
+  comments: Array<Comment>;
   createdAt: Scalars['String'];
   id: Scalars['ID'];
   title: Scalars['String'];
@@ -169,6 +174,7 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Comment: ResolverTypeWrapper<Comment>;
   CommentInput: CommentInput;
+  DeleteCommentInput: DeleteCommentInput;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -184,6 +190,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   Comment: Comment;
   CommentInput: CommentInput;
+  DeleteCommentInput: DeleteCommentInput;
   Float: Scalars['Float'];
   ID: Scalars['ID'];
   Mutation: {};
@@ -208,7 +215,7 @@ export type CommentResolvers<ContextType = any, ParentType extends ResolversPare
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addComment?: Resolver<Maybe<ResolversTypes['Video']>, ParentType, ContextType, RequireFields<MutationAddCommentArgs, 'input' | 'videoId'>>;
   createVideo?: Resolver<Maybe<ResolversTypes['Video']>, ParentType, ContextType, RequireFields<MutationCreateVideoArgs, 'input'>>;
-  deleteComment?: Resolver<Maybe<ResolversTypes['Video']>, ParentType, ContextType, RequireFields<MutationDeleteCommentArgs, 'commentId' | 'videoId'>>;
+  deleteComment?: Resolver<Maybe<ResolversTypes['Video']>, ParentType, ContextType, RequireFields<MutationDeleteCommentArgs, 'commentId' | 'input' | 'videoId'>>;
   updateComment?: Resolver<Maybe<ResolversTypes['Video']>, ParentType, ContextType, RequireFields<MutationUpdateCommentArgs, 'commentId' | 'input' | 'videoId'>>;
 };
 
@@ -218,7 +225,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type VideoResolvers<ContextType = any, ParentType extends ResolversParentTypes['Video'] = ResolversParentTypes['Video']> = {
-  comments?: Resolver<Array<Maybe<ResolversTypes['Comment']>>, ParentType, ContextType>;
+  comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
