@@ -91,38 +91,39 @@ const resolvers = {
         });
       }
       video.comments.push({
-        timecode, content, sessionId, token, username,
-        createdAt: new Date().toISOString()
+        ...input, createdAt: new Date().toISOString()
       });
       await video.save();
-      return video;
+      return videoModelToGraphQL(video);
     },
 
-    updateComment: async (_: Video, {
+    deleteComment: async (_: Video, {
       videoId,
       commentId,
-      input: { content, token }
-    }: MutationUpdateCommentArgs) => {
+      input: { token }
+    }: MutationDeleteCommentArgs) => {
       const video = await VideoModel.findById(videoId);
       if (video === null) {
         throw new GraphQLError('Video not found', {
           extensions: { code: 'VIDEO_NOT_FOUND' }
         });
       }
-      const comment = video.comments.find(comment => comment._id?.toString() === commentId);
-      if (comment === undefined) {
+
+      const comment = video.comments.id(commentId);
+
+      if (comment === undefined || comment === null) {
         throw new GraphQLError('Comment not found', {
           extensions: { code: 'COMMENT_NOT_FOUND' }
         });
-      }
-      if (comment.token !== token) {
+      } else if (comment.token !== token) {
         throw new GraphQLError('Unauthorized', {
           extensions: { code: 'UNAUTHORIZED' }
         });
       }
-      comment.content = content;
+
+      comment.deleteOne();
       await video.save();
-      return video;
+      return videoModelToGraphQL(video);
     }
   }
 };
