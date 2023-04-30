@@ -162,7 +162,11 @@ const VideoPage = () => {
         />
         {comments}
       </Stack>
-      <Grid id="debugCommentGrid" container spacing={1} sx={{marginLeft: '1rem'}}>
+      <Grid id="debugCommentGrid" container spacing={1}
+        sx={{
+          marginLeft: '1rem',
+          width: '80vw'
+        }}>
         <Grid item xs={12} sx={{marginTop: '5rem'}}>
           <hr />
           <h2>Debug: Comment State: {commentState}</h2>

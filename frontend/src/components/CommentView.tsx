@@ -43,9 +43,7 @@ const CommentView = ({comment, editable, playbackTime}: CommentViewProps) => {
     <Collapse in={visible} collapsedSize={0} sx={{ width: '90%' }} >
       <Card sx={{marginTop: '1rem'}}>
         <CardContent>
-          <Typography variant="body1" component="div">
-            {paragraphs}
-          </Typography>
+          {paragraphs}
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             <strong>{comment.username}</strong> at {formatTimecode(comment.timecode)}
           </Typography>

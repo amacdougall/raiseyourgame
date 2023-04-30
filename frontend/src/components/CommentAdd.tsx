@@ -25,7 +25,7 @@ interface CommentAddProps {
 }
 
 /**
- * Comment card. Displays when the playhead reaches the comment's timecode.
+ * Comment-add card. Displays when user wishes to add a comment.
  */
 const CommentAdd = ({
   video, playbackTime, visible, onSubmit, onCancel
@@ -51,7 +51,7 @@ const CommentAdd = ({
   };
 
   /**
-   * Perform default newline behavior if Shift, Control, or Commend is held;
+   * Perform default newline behavior if Shift, Control, or Command is held;
    * submit comment form otherwise.
    */
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
