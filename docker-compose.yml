@@ -1,6 +1,6 @@
 services:
   frontend:
-    profiles: ["frontend"]
+    profiles: ["production"]
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -25,7 +25,7 @@ services:
     entrypoint: ["/entrypoint.sh"]
     command: ["nginx", "-g", "daemon off;"]
   graphql-server:
-    profiles: ["graphql-server"]
+    profiles: ["production"]
     build:
       context: ./graphql-server
       dockerfile: Dockerfile

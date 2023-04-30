@@ -2,16 +2,36 @@
 
 TODO: document what this project is.
 
-## Running in development
+## Running the prod setup in local docker
 
 To run the entire project on localhost:
+
+```
+COMPOSE_PROFILES='production' sudo docker compose up --build
+```
+
+This is a test of the whole system; not set up for local development with
+reloading, etc. To do actual dev work, see the next two sections.
+
+Note that SSL won't work unless you have self-signed keys in `/certbot/conf`.
+See `.env` for exact paths.
+
+## Running in development
 
 ```
 sudo docker compose up --build
 ```
 
-Note that SSL won't work unless you have self-signed keys in `/certbot/conf`.
-See `.env` for exact paths.
+This will start only the MongoDB database; run the server and frontend
+separately:
+
+```
+# in frontend
+npm run dev
+
+# in graphql-server
+npm run debug
+```
 
 ## Running in production
 
