@@ -1,7 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
-import YouTube from 'react-youtube';
 import useInterval from '../hooks/useInterval';
+
+import Box from '@mui/material/Box';
+import YouTube from 'react-youtube';
 
 import { Video } from '../generated/graphql';
 
@@ -21,7 +23,6 @@ interface VideoPlayerProps {
   onPlayerFocusOut: () => void;
 }
 
-
 // NOTE: I tried installing @types/youtube and referencing it in tsconfig.json,
 // but it didn't supply the YT.PlayerState enum; I tapped out for now.
 const PlayerState = {
@@ -32,7 +33,6 @@ const PlayerState = {
   BUFFERING: 3,
   CUED: 5
 };
-
 
 /**
  * VideoPlayer for YouTube videos. Accepts YouTube video ID.
@@ -88,7 +88,7 @@ const VideoPlayer = ({
   const videoDimensions = { width: '100%', height: '100%' };
 
   return (
-    <div style={{position: 'relative', margin: 0, paddingBottom: '56.25%', height: 0}}>
+    <Box style={{position: 'relative', margin: 0, paddingBottom: '56.25%', height: 0}}>
       <YouTube
         id='video-player'
         videoId={video.youTubeId}
@@ -111,7 +111,7 @@ const VideoPlayer = ({
         onEnd={onEnd}
         onStateChange={onStateChange}
       />
-    </div>
+    </Box>
   );
 };
 

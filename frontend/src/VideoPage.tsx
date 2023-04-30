@@ -116,7 +116,10 @@ const VideoPage = () => {
   }).reverse();
 
   return (
-    <Box>
+    <Box sx={{
+      maxWidth: '100vh',
+      margin: 'auto'
+    }}>
       <VideoPlayer
         video={video}
         onReady={onReady}
