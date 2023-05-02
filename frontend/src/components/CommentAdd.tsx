@@ -22,18 +22,22 @@ interface CommentAddProps {
   visible: boolean;
   onSubmit: () => void;
   onCancel: () => void;
+  onNameChangeRequest: () => void;
 }
 
 /**
  * Comment-add card. Displays when user wishes to add a comment.
  */
 const CommentAdd = ({
-  video, playbackTime, visible, onSubmit, onCancel
+  video, playbackTime, visible, onSubmit, onCancel, onNameChangeRequest
 }: CommentAddProps) => {
   const [content, setContent] = useState('');
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
   const submit = useSubmit();
+
+  // safe to cast, because App.tsx has already executed and ensured username is set
+  const username: string = localStorage.getItem('username') as string;
 
   const findCommentInput = (): HTMLTextAreaElement => {
     const textarea = inputRef.current?.querySelector("textarea:not([readonly])") as HTMLTextAreaElement;
@@ -100,7 +104,7 @@ const CommentAdd = ({
         >
           <CardContent>
             <TextField
-              label="Comment"
+              label={'Posting as: ' + username}
               name="content"
               ref={inputRef}
               fullWidth={true}
@@ -118,7 +122,10 @@ const CommentAdd = ({
             <Button type="submit" variant="contained" size="small">
               Post (or hit Enter)
             </Button>
-            <Button variant="outlined" size="small" onClick={cancelComment}>
+            <Button variant="outlined" size="small" onClick={onNameChangeRequest}>
+              Change name?
+            </Button>
+            <Button variant="outlined" color="secondary" size="small" onClick={cancelComment}>
               Cancel (or hit Esc)
             </Button>
           </CardActions>

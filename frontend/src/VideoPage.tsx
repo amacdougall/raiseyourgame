@@ -9,6 +9,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
+import ChangeUsername from './components/ChangeUsername';
 import CommentAdd from './components/CommentAdd';
 import CommentAddButton from './components/CommentAddButton';
 import CommentView from './components/CommentView';
@@ -18,10 +19,11 @@ import Timeline from './components/Timeline';
 import VideoPlayer from './components/VideoPlayer';
 import { Video } from './generated/graphql';
 
-const COMMENT_STATE = {
+const APPLICATION_STATE = {
   READY: 'READY',
   REVIEWING: 'REVIEWING',
-  COMMENTING: 'COMMENTING'
+  COMMENTING: 'COMMENTING',
+  CHANGING_USERNAME: 'CHANGING_USERNAME',
 };
 
 /**
@@ -37,7 +39,8 @@ const VideoPage = () => {
   const [ player, setPlayer ] = useState<YT.Player | null>(null);
   const [ playbackTime, setPlaybackTime ] = useState(0);
   const [ videoDuration, setVideoDuration ] = useState(100);
-  const [ commentState, setCommentState ] = useState(COMMENT_STATE.READY);
+  const [ applicationState, setApplicationState ] = useState(APPLICATION_STATE.READY);
+  const [ previousApplicationState, setPreviousApplicationState ] = useState(applicationState);
   const [ iframePollingInterval, setIframePollingInterval ] = useState(null);
 
   useEffect(() => {
@@ -48,14 +51,19 @@ const VideoPage = () => {
         event.preventDefault();
       }
 
-      if (commentState === COMMENT_STATE.REVIEWING) {
+      if (applicationState === APPLICATION_STATE.REVIEWING) {
         pauseForComment();
       }
     };
 
     document.body.addEventListener('keydown', onKeyDown);
     return () => document.body.removeEventListener('keydown', onKeyDown);
-  }, [commentState]);
+
+    // switch to username select if not defined (first-run experience)
+    if (localStorage.getItem('username') === 'Anonymous') {
+      enterApplicationState(APPLICATION_STATE.CHANGING_USERNAME);
+    }
+  }, [applicationState]);
 
   const onReady = (player: YT.Player) => {
     setPlayer(player);
@@ -65,31 +73,49 @@ const VideoPage = () => {
   const onPlayerFocus = () => {
     // when player is focused, we can't receive keyboard input, so commenting
     // won't work; switch to READY state to display GoButton
-    setCommentState(COMMENT_STATE.READY);
+    enterApplicationState(APPLICATION_STATE.READY);
   };
 
   const onGoButtonClick = () => {
     // NOTE: hidden button can retain focus and be "clicked" by Enter
     // keystroke; so limit this behavior to the READY state.
-    if (commentState == COMMENT_STATE.READY) {
+    if (applicationState == APPLICATION_STATE.READY) {
       beginReviewing();
     }
   };
 
-  const beginReviewing = () => {
-    if (player === null) {
+  const enterApplicationState = (desiredState: string) => {
+    if (player === null || applicationState === desiredState) {
       return;
     }
-    player.playVideo();
-    setCommentState(COMMENT_STATE.REVIEWING);
+
+    // perform state-specific behaviors here
+    switch (desiredState) {
+      case APPLICATION_STATE.REVIEWING:
+        player.playVideo();
+        break;
+      case APPLICATION_STATE.COMMENTING:
+        player.pauseVideo();
+        break;
+      case APPLICATION_STATE.CHANGING_USERNAME:
+        setPreviousApplicationState(applicationState);
+        player.pauseVideo();
+        break;
+    }
+
+    setApplicationState(desiredState);
   };
 
-  const pauseForComment = () => {
-    if (player === null) {
-      return;
-    }
-    player.pauseVideo();
-    setCommentState(COMMENT_STATE.COMMENTING);
+  const beginReviewing = () => enterApplicationState(APPLICATION_STATE.REVIEWING);
+  const pauseForComment = () => enterApplicationState(APPLICATION_STATE.COMMENTING);
+  const pauseForUsernameChange = () => enterApplicationState(APPLICATION_STATE.CHANGING_USERNAME);
+  const resumePreviousState = () => enterApplicationState(previousApplicationState);
+
+  const changeUsername = (username: string) => {
+    localStorage.setItem('username', username);
+    console.log("Set username to " + username);
+    console.log("Resuming application state " + previousApplicationState);
+    setApplicationState(previousApplicationState);
   };
 
   const debugComments = video.comments.map(comment => {
@@ -150,20 +176,28 @@ const VideoPage = () => {
         sx={{marginTop: '1rem'}}
       >
         <GoButton
-          visible={commentState === COMMENT_STATE.READY}
+          visible={applicationState === APPLICATION_STATE.READY}
           onClick={onGoButtonClick}
         />
         <CommentAddButton
-          visible={commentState === COMMENT_STATE.REVIEWING}
+          visible={applicationState === APPLICATION_STATE.REVIEWING}
           onClick={pauseForComment}
         />
         <CommentAdd
           key="commentAdd"
           video={video}
           playbackTime={playbackTime}
-          visible={commentState === COMMENT_STATE.COMMENTING}
+          visible={applicationState === APPLICATION_STATE.COMMENTING}
           onSubmit={beginReviewing}
           onCancel={beginReviewing}
+          onNameChangeRequest={pauseForUsernameChange}
+        />
+        <ChangeUsername
+          key="changeUsername"
+          username={localStorage.getItem('username') as string}
+          visible={applicationState === APPLICATION_STATE.CHANGING_USERNAME}
+          onSubmit={changeUsername}
+          onCancel={resumePreviousState}
         />
         {comments}
       </Stack>
@@ -174,7 +208,7 @@ const VideoPage = () => {
         }}>
         <Grid item xs={12} sx={{marginTop: '5rem'}}>
           <hr />
-          <h2>Debug: Comment State: {commentState}</h2>
+          <h2>Debug: Comment State: {applicationState}</h2>
           <h2>Debug: active item: {document.activeElement?.tagName}</h2>
           <h2>Debug: All Comments</h2>
           <div>{debugComments}</div>
