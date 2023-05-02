@@ -114,7 +114,7 @@ const VideoPage = () => {
         playbackTime={playbackTime}
       />
     );
-  }).reverse();
+  });
 
   return (
     <Box sx={{
