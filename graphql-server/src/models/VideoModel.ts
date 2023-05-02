@@ -14,6 +14,8 @@ export interface VideoInterface {
   _id?: string;
   title: string;
   youTubeId: string;
+  sessionId: string;
+  token: string;
   createdAt: string;
   comments: CommentInterface[];
 }
@@ -42,6 +44,8 @@ const VideoModel = model<VideoInterface, VideoModelType>(
   new Schema<VideoInterface, VideoModelType>({
     title: String,
     youTubeId: String,
+    sessionId: String,
+    token: String,
     createdAt: String,
     comments: [commentSchema]
   })

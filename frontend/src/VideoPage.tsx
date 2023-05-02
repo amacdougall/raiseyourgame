@@ -93,7 +93,9 @@ const VideoPage = () => {
   };
 
   const debugComments = video.comments.map(comment => {
-    const editable = comment.sessionId === localStorage.getItem('sessionId');
+    const editable = [comment.sessionId, video.sessionId].some(id => {
+      return id == localStorage.getItem('sessionId');
+    });
     return (
       <DebugCommentView
         key={comment.id}
@@ -104,7 +106,9 @@ const VideoPage = () => {
   });
 
   const comments = video.comments.map(comment => {
-    const editable = comment.sessionId === localStorage.getItem('sessionId');
+    const editable = [comment.sessionId, video.sessionId].some(id => {
+      return id == localStorage.getItem('sessionId');
+    });
     return (
       <CommentView
         key={comment.id}

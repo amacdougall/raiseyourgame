@@ -54,7 +54,7 @@ const resolvers = {
   Mutation: {
     createVideo: async (
       _: Video,
-      { input: { title, url } }: MutationCreateVideoArgs
+      { input: { title, url, sessionId, token } }: MutationCreateVideoArgs
     ): Promise<Video> => {
       // extract YouTube video id from url
       let youTubeId: string | null = '';
@@ -77,6 +77,8 @@ const resolvers = {
       const video = new VideoModel({
         title,
         youTubeId,
+        sessionId,
+        token,
         createdAt: new Date().toISOString()
       });
       await video.save();

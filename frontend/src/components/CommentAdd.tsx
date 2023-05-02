@@ -57,7 +57,6 @@ const CommentAdd = ({
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     event.stopPropagation(); // limit event to this component
     if (event.key === 'Enter') {
-      console.log("CommentAdd.onKeyDown: Enter");
       if (
         event.getModifierState('Shift') ||
         event.getModifierState('Control') ||

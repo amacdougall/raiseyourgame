@@ -3,12 +3,16 @@ type Video {
   title: String!
   youTubeId: String!
   comments: [Comment!]!
+  sessionId: String!
+  token: String!
   createdAt: String!
 }
 
 input VideoInput {
   title: String!
   url: String!
+  sessionId: String!
+  token: String!
 }
 
 type Comment {

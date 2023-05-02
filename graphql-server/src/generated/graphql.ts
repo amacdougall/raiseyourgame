@@ -91,12 +91,16 @@ export type Video = {
   comments: Array<Comment>;
   createdAt: Scalars['String'];
   id: Scalars['ID'];
+  sessionId: Scalars['String'];
   title: Scalars['String'];
+  token: Scalars['String'];
   youTubeId: Scalars['String'];
 };
 
 export type VideoInput = {
+  sessionId: Scalars['String'];
   title: Scalars['String'];
+  token: Scalars['String'];
   url: Scalars['String'];
 };
 
@@ -228,7 +232,9 @@ export type VideoResolvers<ContextType = any, ParentType extends ResolversParent
   comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  sessionId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  token?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   youTubeId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

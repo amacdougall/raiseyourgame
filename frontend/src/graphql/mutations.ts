@@ -6,6 +6,7 @@ export const CREATE_VIDEO = gql`
       id
       title
       youTubeId
+      sessionId
       createdAt
       comments {
         id
@@ -25,6 +26,7 @@ export const ADD_COMMENT = gql`
       id
       title
       youTubeId
+      sessionId
       createdAt
       comments {
         id
@@ -44,6 +46,8 @@ export const DELETE_COMMENT = gql`
       id
       title
       youTubeId
+      sessionId
+      createdAt
       comments {
         id
         timecode
@@ -53,7 +57,6 @@ export const DELETE_COMMENT = gql`
         token
         createdAt
       }
-      createdAt
     }
   }
 `;

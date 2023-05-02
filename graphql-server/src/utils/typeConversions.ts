@@ -7,6 +7,8 @@ export const videoModelToGraphQL = (videoModel: HydratedDocument<VideoInterface>
     id: videoModel._id,
     title: videoModel.title,
     youTubeId: videoModel.youTubeId,
+    sessionId: videoModel.sessionId,
+    token: videoModel.token,
     createdAt: videoModel.createdAt,
     comments: videoModel.comments.map(comment => {
       return {

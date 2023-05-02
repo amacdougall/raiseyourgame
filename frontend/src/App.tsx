@@ -36,7 +36,9 @@ const router = createBrowserRouter([
         const video = await VideoService.createVideo({
           input: {
             url: videoUrl,
-            title: videoTitle
+            title: videoTitle,
+            sessionId: localStorage.getItem('sessionId') as string,
+            token: localStorage.getItem('token') as string
           }
         });
 

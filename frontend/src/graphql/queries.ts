@@ -6,6 +6,7 @@ export const GET_VIDEO = gql`
       id
       title
       youTubeId
+      sessionId
       createdAt
       comments {
         id
