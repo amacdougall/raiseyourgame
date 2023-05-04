@@ -1,9 +1,10 @@
 import React from 'react';
 import { Form } from 'react-router-dom';
 
-import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -62,9 +63,9 @@ const CommentView = ({video, comment, editable, playbackTime}: CommentViewProps)
                 action={`/video/${video.id}/comment/${comment.id}`}
                 method="delete"
               >
-                <Button type="submit" size="small">
-                  Delete
-                </Button>
+                <IconButton type="submit" size="large">
+                  <DeleteIcon fontSize="inherit" />
+                </IconButton>
               </Form>
             </Box>
             : null
