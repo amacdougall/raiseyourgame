@@ -59,7 +59,6 @@ const ChangeUsername = ({
           }}
         >
           <CardContent>
-            {/* use actual validation? */}
             <TextField
               label={invalidName ?
                 'Choose a username (other than "Anonymous")' :
@@ -78,7 +77,7 @@ const ChangeUsername = ({
               type="submit"
               variant="contained"
               size="small"
-              disabled={content === 'Anonymous'}
+              disabled={invalidName}
             >
               Change username
             </Button>

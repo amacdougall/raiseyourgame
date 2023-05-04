@@ -24,7 +24,7 @@ const DISPLAY_DURATION = 5; // TODO: base on comment length? Or just 10s?
  * Comment card. Displays when the playhead reaches the comment's timecode.
  */
 const CommentView = ({video, comment, editable, playbackTime}: CommentViewProps) => {
-  const visible = (
+  const shown = (
     playbackTime >= comment.timecode &&
     playbackTime < comment.timecode + DISPLAY_DURATION
   );
@@ -44,7 +44,7 @@ const CommentView = ({video, comment, editable, playbackTime}: CommentViewProps)
   };
 
   return (
-    <Collapse in={visible} collapsedSize={0} sx={{ width: '90%' }} >
+    <Collapse in={shown} sx={{ width: '90%' }} timeout={2000}>
       <Paper sx={{
         marginTop: '1rem',
         padding: '0rem 1rem',

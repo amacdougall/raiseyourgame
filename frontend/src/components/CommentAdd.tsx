@@ -19,7 +19,7 @@ const DISPLAY_DURATION = 5;
 interface CommentAddProps {
   video: Video;
   playbackTime: number;
-  visible: boolean;
+  shown: boolean;
   onSubmit: () => void;
   onCancel: () => void;
   onNameChangeRequest: () => void;
@@ -29,7 +29,7 @@ interface CommentAddProps {
  * Comment-add card. Displays when user wishes to add a comment.
  */
 const CommentAdd = ({
-  video, playbackTime, visible, onSubmit, onCancel, onNameChangeRequest
+  video, playbackTime, shown, onSubmit, onCancel, onNameChangeRequest
 }: CommentAddProps) => {
   const [content, setContent] = useState('');
   const formRef = useRef<HTMLFormElement>(null);
@@ -83,10 +83,11 @@ const CommentAdd = ({
 
   return (
     <Collapse
-      in={visible}
+      in={shown}
       collapsedSize={0}
       sx={{ width: '90%' }}
       onEntered={() => findCommentInput().focus()}
+      timeout={2000}
     >
       <Card>
         <Form

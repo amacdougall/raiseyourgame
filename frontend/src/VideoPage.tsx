@@ -9,7 +9,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import ChangeUsername from './components/ChangeUsername';
+import UsernameInput from './components/UsernameInput';
 import CommentAdd from './components/CommentAdd';
 import CommentAddButton from './components/CommentAddButton';
 import CommentView from './components/CommentView';
@@ -176,23 +176,25 @@ const VideoPage = () => {
         sx={{marginTop: '1rem'}}
       >
         <GoButton
-          visible={applicationState === APPLICATION_STATE.READY}
+          key="goButton"
+          shown={applicationState === APPLICATION_STATE.READY}
           onClick={onGoButtonClick}
         />
         <CommentAddButton
-          visible={applicationState === APPLICATION_STATE.REVIEWING}
+          key="commentAddButton"
+          shown={applicationState === APPLICATION_STATE.REVIEWING}
           onClick={pauseForComment}
         />
         <CommentAdd
           key="commentAdd"
           video={video}
           playbackTime={playbackTime}
-          visible={applicationState === APPLICATION_STATE.COMMENTING}
+          shown={applicationState === APPLICATION_STATE.COMMENTING}
           onSubmit={beginReviewing}
           onCancel={beginReviewing}
           onNameChangeRequest={pauseForUsernameChange}
         />
-        <ChangeUsername
+        <UsernameInput
           key="changeUsername"
           username={localStorage.getItem('username') as string}
           visible={applicationState === APPLICATION_STATE.CHANGING_USERNAME}

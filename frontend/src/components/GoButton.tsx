@@ -6,16 +6,16 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 interface GoButtonProps {
-  visible: boolean;
+  shown: boolean;
   onClick: () => void;
 }
 
 /**
  * 
  */
-const GoButton = ({visible, onClick}: GoButtonProps) => {
+const GoButton = ({shown, onClick}: GoButtonProps) => {
   return (
-    <Collapse in={visible} collapsedSize={0}>
+    <Collapse in={shown} timeout={2000}>
       <Button onClick={onClick} variant="contained">
         <Stack>
           <Typography variant="h1">
