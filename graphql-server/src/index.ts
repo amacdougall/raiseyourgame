@@ -54,8 +54,9 @@ const resolvers = {
   Mutation: {
     createVideo: async (
       _: Video,
-      { input: { title, url, sessionId, token } }: MutationCreateVideoArgs
+      { input }: MutationCreateVideoArgs
     ): Promise<Video> => {
+      const url = input.url;
       // extract YouTube video id from url
       let youTubeId: string | null = '';
       if (url.indexOf('youtube.com/watch?v=') !== -1) {
@@ -75,10 +76,7 @@ const resolvers = {
       }
 
       const video = new VideoModel({
-        title,
-        youTubeId,
-        sessionId,
-        token,
+        ...input,
         createdAt: new Date().toISOString()
       });
       await video.save();
@@ -99,6 +97,10 @@ const resolvers = {
       return videoModelToGraphQL(video);
     },
 
+    /**
+     * Delete a comment from a video. Only the comment author or video owner
+     * may delete a comment; otherwise, throws UNAUTHORIZED.
+     */
     deleteComment: async (_: Video, {
       videoId,
       commentId,
@@ -117,7 +119,7 @@ const resolvers = {
         throw new GraphQLError('Comment not found', {
           extensions: { code: 'COMMENT_NOT_FOUND' }
         });
-      } else if (comment.token !== token) {
+      } else if (![comment.token, video.token].some(t => t === token)) {
         throw new GraphQLError('Unauthorized', {
           extensions: { code: 'UNAUTHORIZED' }
         });

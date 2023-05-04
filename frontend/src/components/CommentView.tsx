@@ -18,7 +18,7 @@ interface CommentViewProps {
   playbackTime: number;
 }
 
-const DISPLAY_DURATION = 5;
+const DISPLAY_DURATION = 5; // TODO: base on comment length? Or just 10s?
 
 /**
  * Comment card. Displays when the playhead reaches the comment's timecode.
