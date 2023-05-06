@@ -96,7 +96,6 @@ const CommentAdd = ({
     }
   }, [shown]);
 
-  {/* TODO: pass other React props through so we can style the Box */}
   return (
     <Box shown={shown} sx={{width: '90%'}}>
       <Card>
