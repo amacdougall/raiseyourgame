@@ -98,7 +98,7 @@ const CommentAdd = ({
 
   {/* TODO: pass other React props through so we can style the Box */}
   return (
-    <Box shown={shown}>
+    <Box shown={shown} sx={{width: '90%'}}>
       <Card>
         <Form
           name="createComment"
