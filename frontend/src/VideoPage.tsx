@@ -89,6 +89,8 @@ const VideoPage = () => {
       return;
     }
 
+    console.log("...entering state %s", desiredState);
+
     // perform state-specific behaviors here
     switch (desiredState) {
       case APPLICATION_STATE.REVIEWING:
@@ -173,7 +175,7 @@ const VideoPage = () => {
         spacing={0}
         justifyContent="center"
         alignItems="center"
-        sx={{marginTop: '1rem'}}
+        sx={{ marginTop: '1rem' }}
       >
         <GoButton
           key="goButton"
@@ -197,7 +199,7 @@ const VideoPage = () => {
         <UsernameInput
           key="changeUsername"
           username={localStorage.getItem('username') as string}
-          visible={applicationState === APPLICATION_STATE.CHANGING_USERNAME}
+          shown={applicationState === APPLICATION_STATE.CHANGING_USERNAME}
           onSubmit={changeUsername}
           onCancel={resumePreviousState}
         />

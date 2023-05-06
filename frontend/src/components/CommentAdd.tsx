@@ -1,16 +1,17 @@
 import React from 'react';
-import { useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Form, useSubmit } from 'react-router-dom';
 
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Collapse from '@mui/material/Collapse';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+
+import BoxWithTransition from './BoxWithTransition';
 
 import { Video } from '../generated/graphql';
 
@@ -24,6 +25,14 @@ interface CommentAddProps {
   onCancel: () => void;
   onNameChangeRequest: () => void;
 }
+
+const Box = BoxWithTransition({
+  property: "height",
+  startValue: "0rem",
+  endValue: "11rem",
+  duration: "0.5s",
+  animationStyle: "ease-out"
+});
 
 /**
  * Comment-add card. Displays when user wishes to add a comment.
@@ -81,14 +90,15 @@ const CommentAdd = ({
     }
   };
 
+  useEffect(() => {
+    if (shown) {
+      findCommentInput().focus();
+    }
+  }, [shown]);
+
+  {/* TODO: pass other React props through so we can style the Box */}
   return (
-    <Collapse
-      in={shown}
-      collapsedSize={0}
-      sx={{ width: '90%' }}
-      onEntered={() => findCommentInput().focus()}
-      timeout={2000}
-    >
+    <Box shown={shown}>
       <Card>
         <Form
           name="createComment"
@@ -132,7 +142,7 @@ const CommentAdd = ({
           </CardActions>
         </Form>
       </Card>
-    </Collapse>
+    </Box>
   );
 };
 

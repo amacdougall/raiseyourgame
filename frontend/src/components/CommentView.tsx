@@ -1,13 +1,13 @@
 import React from 'react';
 import { Form } from 'react-router-dom';
 
-import Box from '@mui/material/Box';
-import Collapse from '@mui/material/Collapse';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+
+import BoxWithTransition from './BoxWithTransition';
 
 import { Video, Comment } from '../generated/graphql';
 
@@ -17,6 +17,14 @@ interface CommentViewProps {
   editable: boolean;
   playbackTime: number;
 }
+
+const Box = BoxWithTransition({
+  property: "height",
+  startValue: "0rem",
+  endValue: "5rem", // TODO: calculate this somehow?
+  duration: "0.5s",
+  animationStyle: "ease-out"
+});
 
 const DISPLAY_DURATION = 5; // TODO: base on comment length? Or just 10s?
 
@@ -44,9 +52,8 @@ const CommentView = ({video, comment, editable, playbackTime}: CommentViewProps)
   };
 
   return (
-    <Collapse in={shown} sx={{ width: '90%' }} timeout={2000}>
+    <Box shown={shown} sx={{width: '90%'}}>
       <Paper sx={{
-        marginTop: '1rem',
         padding: '0rem 1rem',
       }}>
         <Stack direction="row" sx={{marginTop: '1rem'}}>
@@ -57,7 +64,7 @@ const CommentView = ({video, comment, editable, playbackTime}: CommentViewProps)
             </Typography>
           </Stack>
           { editable ?
-            <Box sx={{ marginLeft: 'auto' }}>
+            <Box shown={true} sx={{ marginLeft: 'auto' }}>
               <Form
                 name="deleteComment"
                 action={`/video/${video.id}/comment/${comment.id}`}
@@ -72,7 +79,7 @@ const CommentView = ({video, comment, editable, playbackTime}: CommentViewProps)
           }
         </Stack>
       </Paper>
-    </Collapse>
+    </Box>
   );
 };
 

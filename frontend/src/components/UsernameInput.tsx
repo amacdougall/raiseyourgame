@@ -1,31 +1,40 @@
 import React from 'react';
-import { useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Form, useSubmit } from 'react-router-dom';
 
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Collapse from '@mui/material/Collapse';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+import BoxWithTransition from './BoxWithTransition';
+
 interface ChangeUsernameProps {
   username: string;
-  visible: boolean;
+  shown: boolean;
   onSubmit: (username: string) => void;
   onCancel: () => void;
 }
+
+const Box = BoxWithTransition({
+  property: "height",
+  startValue: "0rem",
+  endValue: "11rem",
+  duration: "0.5s",
+  animationStyle: "ease-out"
+});
 
 /**
  * Username-chooser card. Displays when username is Anonymous, or when user has
  * requested a change.
  */
-const ChangeUsername = ({
+const UsernameInput = ({
   username,
-  visible,
+  shown,
   onSubmit,
   onCancel
 }: ChangeUsernameProps) => {
@@ -43,13 +52,14 @@ const ChangeUsername = ({
     }
   };
 
+  useEffect(() => {
+    if (shown) {
+      findCommentInput().focus();
+    }
+  }, [shown]);
+
   return (
-    <Collapse
-      in={visible}
-      collapsedSize={0}
-      sx={{ width: '90%' }}
-      onEntered={() => findCommentInput().focus()}
-    >
+    <Box shown={shown}>
       <Card>
         <Form
           name="chooseUsername"
@@ -87,8 +97,8 @@ const ChangeUsername = ({
           </CardActions>
         </Form>
       </Card>
-    </Collapse>
+    </Box>
   );
 };
 
-export default ChangeUsername;
+export default UsernameInput;
