@@ -1,3 +1,5 @@
+scalar Date
+
 type Video {
   id: ID!
   title: String!
@@ -5,7 +7,7 @@ type Video {
   comments: [Comment!]!
   sessionId: String!
   token: String!
-  createdAt: String!
+  createdAt: Date!
 }
 
 input VideoInput {
@@ -22,7 +24,7 @@ type Comment {
   sessionId: String!
   username: String!
   token: String!
-  createdAt: String!
+  createdAt: Date!
 }
 
 input CommentInput {

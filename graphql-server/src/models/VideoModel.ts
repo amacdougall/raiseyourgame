@@ -7,7 +7,7 @@ interface CommentInterface {
   sessionId: string;
   token: string;
   username: string;
-  createdAt: string;
+  createdAt: Date;
 }
 
 export interface VideoInterface {
@@ -16,7 +16,7 @@ export interface VideoInterface {
   youTubeId: string;
   sessionId: string;
   token: string;
-  createdAt: string;
+  createdAt: Date;
   comments: CommentInterface[];
 }
 
@@ -26,7 +26,7 @@ const commentSchema = new Schema<CommentInterface>({
   sessionId: String,
   token: String,
   username: String,
-  createdAt: String
+  createdAt: Date
 });
 
 // NOTE: https://mongoosejs.com/docs/typescript/subdocuments.html 
@@ -46,7 +46,7 @@ const VideoModel = model<VideoInterface, VideoModelType>(
     youTubeId: String,
     sessionId: String,
     token: String,
-    createdAt: String,
+    createdAt: Date,
     comments: [commentSchema]
   })
 );

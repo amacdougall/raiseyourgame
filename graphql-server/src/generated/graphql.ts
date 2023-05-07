@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -12,12 +12,13 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Date: any;
 };
 
 export type Comment = {
   __typename?: 'Comment';
   content: Scalars['String'];
-  createdAt: Scalars['String'];
+  createdAt: Scalars['Date'];
   id: Scalars['ID'];
   sessionId: Scalars['String'];
   timecode: Scalars['Float'];
@@ -89,7 +90,7 @@ export type UpdateCommentInput = {
 export type Video = {
   __typename?: 'Video';
   comments: Array<Comment>;
-  createdAt: Scalars['String'];
+  createdAt: Scalars['Date'];
   id: Scalars['ID'];
   sessionId: Scalars['String'];
   title: Scalars['String'];
@@ -178,6 +179,7 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Comment: ResolverTypeWrapper<Comment>;
   CommentInput: CommentInput;
+  Date: ResolverTypeWrapper<Scalars['Date']>;
   DeleteCommentInput: DeleteCommentInput;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
@@ -194,6 +196,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   Comment: Comment;
   CommentInput: CommentInput;
+  Date: Scalars['Date'];
   DeleteCommentInput: DeleteCommentInput;
   Float: Scalars['Float'];
   ID: Scalars['ID'];
@@ -207,7 +210,7 @@ export type ResolversParentTypes = {
 
 export type CommentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']> = {
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   sessionId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   timecode?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
@@ -215,6 +218,10 @@ export type CommentResolvers<ContextType = any, ParentType extends ResolversPare
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
+
+export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
+  name: 'Date';
+}
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addComment?: Resolver<Maybe<ResolversTypes['Video']>, ParentType, ContextType, RequireFields<MutationAddCommentArgs, 'input' | 'videoId'>>;
@@ -230,7 +237,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type VideoResolvers<ContextType = any, ParentType extends ResolversParentTypes['Video'] = ResolversParentTypes['Video']> = {
   comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   sessionId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -241,6 +248,7 @@ export type VideoResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type Resolvers<ContextType = any> = {
   Comment?: CommentResolvers<ContextType>;
+  Date?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Video?: VideoResolvers<ContextType>;

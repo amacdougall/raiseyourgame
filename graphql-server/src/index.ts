@@ -25,6 +25,7 @@ import {
   MutationDeleteCommentArgs,
 } from './generated/graphql';
 import { videoModelToGraphQL } from './utils/typeConversions.js';
+import DateScalar from './scalars/DateScalar.js';
 
 const MONGODB_URI = process.env.MONGODB_URI;
 if (MONGODB_URI === undefined) {
@@ -34,6 +35,7 @@ if (MONGODB_URI === undefined) {
 
 // TODO: put resolvers in a different file
 const resolvers = {
+  Date: DateScalar,
   Query: {
     videos: async (): Promise<Video[]> => {
       const videoModels = await VideoModel.find({});
@@ -76,8 +78,11 @@ const resolvers = {
       }
 
       const video = new VideoModel({
-        ...input,
-        createdAt: new Date().toISOString()
+        title: input.title,
+        youTubeId,
+        sessionId: input.sessionId,
+        token: input.token,
+        createdAt: new Date()
       });
       await video.save();
       return videoModelToGraphQL(video);
@@ -90,9 +95,7 @@ const resolvers = {
           extensions: { code: 'VIDEO_NOT_FOUND' }
         });
       }
-      video.comments.push({
-        ...input, createdAt: new Date().toISOString()
-      });
+      video.comments.push({ ...input, createdAt: new Date() });
       await video.save();
       return videoModelToGraphQL(video);
     },
