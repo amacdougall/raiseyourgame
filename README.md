@@ -42,6 +42,17 @@ env files do not contain secrets.
 ./bin/run_production.sh
 ```
 
+### Cleanup script
+
+This application is anonymous but ephemeral. We want to delete all videos older
+than 30 days. Add this script to the root crontab (I chose to run daily at 4am):
+
+```
+<cron timing expression> /home/<user>/raiseyourgame/bin/delete_old_videos.sh
+```
+
+### SSL certificates
+
 Note that SSL won't work unless Certbot-generated keys are present in
 `/certbot/conf`. To produce these keys,
 
