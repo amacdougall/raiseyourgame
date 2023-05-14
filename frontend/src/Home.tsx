@@ -11,6 +11,7 @@ const Home = () => {
     <div>
       <h1>Raise Your Game</h1>
       <p>Comment on a YouTube video, or get feedback from others.</p>
+      <p>This page will have styling Real Soon Now™!</p>
       <h2>Select a video</h2>
       { /* TODO: layout/style with Material UI */ }
       <Form name="createVideo" action="/video" method="post">
