@@ -4,17 +4,14 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import BoxWithTransition from './BoxWithTransition';
+import CollapsingBox from './CollapsingBox';
 
 interface CommentAddButtonProps {
   shown: boolean;
   onClick: () => void;
 }
 
-const Box = BoxWithTransition({
-  property: "height",
-  startValue: "0rem",
-  endValue: "11rem",
+const Box = CollapsingBox({
   duration: "0.5s",
   animationStyle: "ease-out"
 });

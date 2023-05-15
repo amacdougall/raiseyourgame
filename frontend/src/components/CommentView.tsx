@@ -7,7 +7,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import BoxWithTransition from './BoxWithTransition';
+import CollapsingBox from './CollapsingBox';
 
 import { Video, Comment } from '../generated/graphql';
 
@@ -18,10 +18,7 @@ interface CommentViewProps {
   playbackTime: number;
 }
 
-const Box = BoxWithTransition({
-  property: "height",
-  startValue: "0rem",
-  endValue: "5rem", // TODO: calculate this somehow?
+const Box = CollapsingBox({
   duration: "0.5s",
   animationStyle: "ease-out"
 });

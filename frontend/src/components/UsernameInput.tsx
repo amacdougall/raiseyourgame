@@ -11,7 +11,7 @@ import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import BoxWithTransition from './BoxWithTransition';
+import CollapsingBox from './CollapsingBox';
 
 interface ChangeUsernameProps {
   username: string;
@@ -20,10 +20,7 @@ interface ChangeUsernameProps {
   onCancel: () => void;
 }
 
-const Box = BoxWithTransition({
-  property: "height",
-  startValue: "0rem",
-  endValue: "11rem",
+const Box = CollapsingBox({
   duration: "0.5s",
   animationStyle: "ease-out"
 });
