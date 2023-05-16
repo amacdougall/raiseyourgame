@@ -37,26 +37,31 @@ const CollapsingBox = ({ duration, animationStyle }: CollapsingBoxProps) => {
     useEffect(() => {
       const box = boxRef.current;
 
-      if (box?.clientHeight !== null && box?.clientHeight !== undefined) {
-        const endHeight = box.clientHeight + "px";
+      // Defer this CSS setup so the box has a second to fully render; for
+      // instance, MUI TextField needs to go from 1 row to the specified
+      // 3 before its height is correct.
+      setTimeout(() => {
+        if (box?.clientHeight !== null && box?.clientHeight !== undefined) {
+          const endHeight = box.clientHeight + "px";
 
-        if (!expanded) {
-          const expandedClass = css`
-            height: ${endHeight};
-            transition: height ${duration} ${animationStyle};
-          `;
-          setExpanded(expandedClass);
-        }
+          if (!expanded) {
+            const expandedClass = css`
+              height: ${endHeight};
+              transition: height ${duration} ${animationStyle};
+            `;
+            setExpanded(expandedClass);
+          }
 
-        if (!collapsed) {
-          const collapsedClass = css`
-            height: 0px;
-            transition: height ${duration} ${animationStyle};
-          `;
-          setCollapsed(collapsedClass);
+          if (!collapsed) {
+            const collapsedClass = css`
+              height: 0px;
+              transition: height ${duration} ${animationStyle};
+            `;
+            setCollapsed(collapsedClass);
+          }
         }
-      }
-    }, [shown]);
+      }, 0);
+    }, []);
 
     return (
       <Box ref={boxRef} css={animation} sx={{ overflow: "hidden", ...sx }}>
