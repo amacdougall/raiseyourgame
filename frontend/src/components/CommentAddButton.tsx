@@ -29,14 +29,9 @@ const CommentAddButton = ({shown, onClick}: CommentAddButtonProps) => {
         sx={{
           borderRadius: '0.5rem',
         }}>
-        <Stack>
-          <Typography variant="h1">
-            ADD COMMENT
-          </Typography>
-          <Typography variant="body1" sx={{marginTop: '1rem'}}>
-            (Or just start typing!)
-          </Typography>
-        </Stack>
+        <Typography variant="h5">
+          ADD COMMENT
+        </Typography>
       </Button>
     </Box>
   );

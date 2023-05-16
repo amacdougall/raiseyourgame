@@ -24,21 +24,14 @@ const Box = CollapsingBox({
  */
 const GoButton = ({shown, onClick}: GoButtonProps) => {
   return (
-    <Box shown={shown} >
+    <Box shown={shown}>
       <Button
         onClick={onClick}
         variant="contained"
-        sx={{
-          borderRadius: '0.5rem',
-        }}>
-        <Stack>
-          <Typography variant="h1">
-            BEGIN
-          </Typography>
-          <Typography variant="body1" sx={{marginTop: '1rem'}}>
-            (Seriously, click this button to start commenting.)
-          </Typography>
-        </Stack>
+        sx={{ borderRadius: '0.5rem' }}>
+        <Typography variant="h5">
+          BEGIN REVIEWING
+        </Typography>
       </Button>
     </Box>
   );
