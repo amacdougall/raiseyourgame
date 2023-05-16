@@ -10,7 +10,11 @@ import Typography from '@mui/material/Typography';
 
 import CollapsingBox from './CollapsingBox';
 
-import { EXPAND_DURATION, EXPAND_ANIMATION_STYLE } from '../constants';
+import {
+  COMMENT_DISPLAY_DURATION,
+  EXPAND_DURATION,
+  EXPAND_ANIMATION_STYLE
+} from '../constants';
 import { Video, Comment } from '../generated/graphql';
 
 interface CommentViewProps {
@@ -25,15 +29,13 @@ const Frame = CollapsingBox({
   animationStyle: EXPAND_ANIMATION_STYLE
 });
 
-const DISPLAY_DURATION = 5; // TODO: base on comment length? Or just 10s?
-
 /**
  * Comment card. Displays when the playhead reaches the comment's timecode.
  */
 const CommentView = ({video, comment, editable, playbackTime}: CommentViewProps) => {
   const shown = (
     playbackTime >= comment.timecode &&
-    playbackTime < comment.timecode + DISPLAY_DURATION
+    playbackTime < comment.timecode + COMMENT_DISPLAY_DURATION
   );
 
   const paragraphs = comment.content.split(/\r?\n/).map((p, n) => {
