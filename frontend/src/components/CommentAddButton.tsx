@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
+import { EXPAND_DURATION, EXPAND_ANIMATION_STYLE } from '../constants';
 import CollapsingBox from './CollapsingBox';
 
 interface CommentAddButtonProps {
@@ -12,8 +13,8 @@ interface CommentAddButtonProps {
 }
 
 const Box = CollapsingBox({
-  duration: "0.5s",
-  animationStyle: "ease-out"
+  duration: EXPAND_DURATION,
+  animationStyle: EXPAND_ANIMATION_STYLE
 });
 
 /**

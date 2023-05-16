@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 
 import CollapsingBox from './CollapsingBox';
 
+import { EXPAND_DURATION, EXPAND_ANIMATION_STYLE } from '../constants';
 import { Video, Comment } from '../generated/graphql';
 
 interface CommentViewProps {
@@ -20,8 +21,8 @@ interface CommentViewProps {
 }
 
 const Frame = CollapsingBox({
-  duration: "0.5s",
-  animationStyle: "ease-out"
+  duration: EXPAND_DURATION,
+  animationStyle: EXPAND_ANIMATION_STYLE
 });
 
 const DISPLAY_DURATION = 5; // TODO: base on comment length? Or just 10s?

@@ -11,6 +11,7 @@ import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+import { EXPAND_DURATION, EXPAND_ANIMATION_STYLE } from '../constants';
 import CollapsingBox from './CollapsingBox';
 
 import { Video } from '../generated/graphql';
@@ -27,8 +28,8 @@ interface CommentAddProps {
 }
 
 const Box = CollapsingBox({
-  duration: "0.5s",
-  animationStyle: "ease-out"
+  duration: EXPAND_DURATION,
+  animationStyle: EXPAND_ANIMATION_STYLE
 });
 
 /**
