@@ -24,7 +24,12 @@ const Box = CollapsingBox({
 const GoButton = ({shown, onClick}: GoButtonProps) => {
   return (
     <Box shown={shown} >
-      <Button onClick={onClick} variant="contained">
+      <Button
+        onClick={onClick}
+        variant="contained"
+        sx={{
+          borderRadius: '0.5rem',
+        }}>
         <Stack>
           <Typography variant="h1">
             BEGIN

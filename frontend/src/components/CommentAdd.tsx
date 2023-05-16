@@ -95,7 +95,7 @@ const CommentAdd = ({
 
   return (
     <Box shown={shown} sx={{width: '90%'}}>
-      <Card>
+      <Card elevation={0}>
         <Form
           name="createComment"
           ref={formRef}

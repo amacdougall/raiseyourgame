@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form } from 'react-router-dom';
 
+import Box from '@mui/material/Box';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
@@ -18,7 +19,7 @@ interface CommentViewProps {
   playbackTime: number;
 }
 
-const Box = CollapsingBox({
+const Frame = CollapsingBox({
   duration: "0.5s",
   animationStyle: "ease-out"
 });
@@ -49,8 +50,13 @@ const CommentView = ({video, comment, editable, playbackTime}: CommentViewProps)
   };
 
   return (
-    <Box shown={shown} sx={{width: '90%'}}>
-      <Paper sx={{
+    <Frame shown={shown} sx={{
+      marginTop: '0.5rem',
+      width: '90%',
+      backgroundColor: 'rgb(167, 202, 237)',
+      borderRadius: '0.5rem',
+    }}>
+      <Box sx={{
         padding: '0rem 1rem',
       }}>
         <Stack direction="row" sx={{marginTop: '1rem'}}>
@@ -61,7 +67,7 @@ const CommentView = ({video, comment, editable, playbackTime}: CommentViewProps)
             </Typography>
           </Stack>
           { editable ?
-            <Box shown={true} sx={{ marginLeft: 'auto' }}>
+            <Box sx={{ marginLeft: 'auto' }}>
               <Form
                 name="deleteComment"
                 action={`/video/${video.id}/comment/${comment.id}`}
@@ -75,8 +81,8 @@ const CommentView = ({video, comment, editable, playbackTime}: CommentViewProps)
             : null
           }
         </Stack>
-      </Paper>
-    </Box>
+      </Box>
+    </Frame>
   );
 };
 
