@@ -30,10 +30,10 @@ const CollapsingBox = ({ duration, animationStyle }: CollapsingBoxProps) => {
 
     const animation = shown ? expanded : collapsed;
 
-    // NOTE: this trick is necessary because CSS cannot do a vertical transition
-    // without reflowing everything below the transitioning object on every
-    // frame. No problem: compute the height once and use that. These comment
-    // objects are unable to change height past the initial render.
+    // NOTE: this trick is necessary because CSS cannot transition to height:
+    // 'auto' without reflowing everything below the transitioning object on
+    // every frame. No problem: compute the height once and use that. These
+    // comment objects are unable to change height past the initial render.
     useEffect(() => {
       const box = boxRef.current;
 

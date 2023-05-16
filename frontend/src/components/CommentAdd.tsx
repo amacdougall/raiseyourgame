@@ -116,8 +116,7 @@ const CommentAdd = ({
               ref={inputRef}
               fullWidth={true}
               multiline={true}
-              minRows={2}
-              maxRows={5}
+              rows={3}
               value={content}
               onKeyDown={onKeyDown}
               onChange={event => setContent(event.target.value)}
