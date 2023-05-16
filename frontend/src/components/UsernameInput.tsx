@@ -57,8 +57,8 @@ const UsernameInput = ({
   }, [shown]);
 
   return (
-    <Box shown={shown}>
-      <Card>
+    <Box shown={shown} sx={{ width: '90%' }}>
+      <Card elevation={0}>
         <Form
           name="chooseUsername"
           onSubmit={event => {
