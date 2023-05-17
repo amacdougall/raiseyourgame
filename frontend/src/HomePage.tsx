@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 
 import VideoService from './services/VideoService';
 
-const Home = () => {
+const HomePage = () => {
   const [videoUrl, setVideoUrl] = React.useState('');
   const [videoTitle, setVideoTitle] = React.useState('');
 
@@ -63,4 +63,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;

@@ -3,7 +3,7 @@ import Container from '@mui/material/Container';
 import { createBrowserRouter, RouterProvider, redirect } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
-import Home from './Home';
+import HomePage from './HomePage';
 import VideoPage from './VideoPage';
 import VideoService from './services/VideoService';
 
@@ -22,11 +22,11 @@ if (localStorage.getItem('username') === null) {
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home />,
+    element: <HomePage />,
   },
   {
     path: '/video',
-    element: <Home />,
+    element: <HomePage />,
     action: async ({ request }) => {
       const formData = await request.formData();
       const videoUrl = formData.get('videoUrl') as string;
