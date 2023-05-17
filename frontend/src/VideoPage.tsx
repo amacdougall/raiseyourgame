@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Form, useLoaderData } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -149,6 +150,9 @@ const VideoPage = () => {
       maxWidth: '100vh',
       margin: 'auto'
     }}>
+      <Helmet>
+        <title>Raise Your Game: {video.title}</title>
+      </Helmet>
       <VideoPlayer
         video={video}
         onReady={onReady}
