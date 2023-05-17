@@ -47,7 +47,7 @@ const VideoPage = () => {
     // defined within useEffect to get latest state variables
     const onKeyDown = (event: KeyboardEvent) => {
       // cancel PgDn effect of spacebar
-      if (event.key === ' ') {
+      if (['Tab', 'Enter', ' '].some(k => k === event.key)) {
         event.preventDefault();
       }
 
