@@ -89,8 +89,6 @@ const VideoPage = () => {
       return;
     }
 
-    console.log("...entering state %s", desiredState);
-
     // perform state-specific behaviors here
     switch (desiredState) {
       case APPLICATION_STATE.REVIEWING:
@@ -115,8 +113,6 @@ const VideoPage = () => {
 
   const changeUsername = (username: string) => {
     localStorage.setItem('username', username);
-    console.log("Set username to " + username);
-    console.log("Resuming application state " + previousApplicationState);
     setApplicationState(previousApplicationState);
   };
 
@@ -156,15 +152,11 @@ const VideoPage = () => {
       <VideoPlayer
         video={video}
         onReady={onReady}
-        onPlay={() => console.log('video play')}
-        onPause={() => console.log('video pause')}
-        onEnd={() => console.log('video end')}
         onProgress={({time, duration}) => {
           setPlaybackTime(time);
           setVideoDuration(duration);
         }}
         onPlayerFocus={onPlayerFocus}
-        onPlayerFocusOut={() => console.log('player focusOut')}
       />
       <Timeline
         time={playbackTime}
