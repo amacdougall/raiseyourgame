@@ -14,13 +14,13 @@ interface OnProgressArguments {
 
 interface VideoPlayerProps {
   video: Video;
-  onReady: (player: YT.Player) => void;
-  onPlay: () => void;
-  onPause: () => void;
-  onEnd: () => void;
-  onProgress: ({time, duration}: OnProgressArguments) => void;
-  onPlayerFocus: () => void;
-  onPlayerFocusOut: () => void;
+  onReady?: (player: YT.Player) => void;
+  onPlay?: () => void;
+  onPause?: () => void;
+  onEnd?: () => void;
+  onProgress?: ({time, duration}: OnProgressArguments) => void;
+  onPlayerFocus?: () => void;
+  onPlayerFocusOut?: () => void;
 }
 
 // NOTE: I tried installing @types/youtube and referencing it in tsconfig.json,
@@ -64,7 +64,7 @@ const VideoPlayer = ({
     if (player === null) {
       return;
     };
-    player && onProgress({
+    player && onProgress && onProgress({
       time: player.getCurrentTime(),
       duration: player.getDuration()
     });
@@ -74,9 +74,9 @@ const VideoPlayer = ({
     if (activeElement !== window.document.activeElement) {
       const playerFrame = document.getElementById('video-player');
       if (activeElement === playerFrame) {
-        onPlayerFocusOut();
+        onPlayerFocusOut && onPlayerFocusOut();
       } else if (window.document.activeElement === playerFrame) {
-        onPlayerFocus();
+        onPlayerFocus && onPlayerFocus();
       }
       setActiveElement(window.document.activeElement);
     }
@@ -104,7 +104,7 @@ const VideoPlayer = ({
         }}
         onReady={event => {
           setPlayer(event.target);
-          onReady(event.target);
+          onReady && onReady(event.target);
         }}
         onPlay={onPlay}
         onPause={onPause}
