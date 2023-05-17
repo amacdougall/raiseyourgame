@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '@mui/material/styles';
 
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
@@ -21,6 +22,13 @@ const Box = CollapsingBox({
  * 
  */
 const CommentAddButton = ({shown, onClick}: CommentAddButtonProps) => {
+  const theme = useTheme();
+  const hideOnMobile = {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
+  };
+
   return (
     <Box shown={shown}>
       <Button
@@ -29,9 +37,14 @@ const CommentAddButton = ({shown, onClick}: CommentAddButtonProps) => {
         sx={{
           borderRadius: '0.5rem',
         }}>
-        <Typography variant="h5">
-          ADD COMMENT
-        </Typography>
+        <Stack>
+          <Typography variant="h5">
+            ADD COMMENT
+          </Typography>
+          <Typography variant="body1" sx={{ ...hideOnMobile }}>
+            (or start typing)
+          </Typography>
+        </Stack>
       </Button>
     </Box>
   );

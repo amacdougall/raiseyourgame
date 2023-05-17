@@ -1,6 +1,7 @@
 import React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import { Form, useSubmit } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
 
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -40,6 +41,9 @@ const CommentAdd = ({
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
   const submit = useSubmit();
+  const theme = useTheme();
+
+  const hideOnMobile = { [theme.breakpoints.down('sm')]: { display: 'none' } };
 
   // safe to cast, because App.tsx has already executed and ensured username is set
   const username: string = localStorage.getItem('username') as string;
@@ -123,15 +127,28 @@ const CommentAdd = ({
             />
             <input type="hidden" name="timecode" value={playbackTime} />
           </CardContent>
-          <CardActions>
+          {/* CardActions 8px padding + 8px marginleft == CardContent 16px padding */}
+          <CardActions sx={{ marginLeft: '8px' }}>
             <Button type="submit" variant="contained" size="small">
-              Post (or hit Enter)
+              <Typography variant="button">
+                Post
+              </Typography>
+              <Typography variant="button" sx={hideOnMobile}>
+                &nbsp;(or hit Enter)
+              </Typography>
             </Button>
             <Button variant="outlined" size="small" onClick={onNameChangeRequest}>
-              Change name?
+              <Typography variant="button">
+                Change name?
+              </Typography>
             </Button>
             <Button variant="outlined" color="secondary" size="small" onClick={cancelComment}>
-              Cancel (or hit Esc)
+              <Typography variant="button">
+                Cancel
+              </Typography>
+              <Typography variant="button" sx={hideOnMobile}>
+                &nbsp;(or hit Esc)
+              </Typography>
             </Button>
           </CardActions>
         </Form>

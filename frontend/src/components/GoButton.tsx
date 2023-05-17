@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react';
-import { css, keyframes } from '@emotion/react';
 
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
@@ -29,9 +28,11 @@ const GoButton = ({shown, onClick}: GoButtonProps) => {
         onClick={onClick}
         variant="contained"
         sx={{ borderRadius: '0.5rem' }}>
-        <Typography variant="h5">
-          BEGIN REVIEWING
-        </Typography>
+        <Stack>
+          <Typography variant="h5">
+            BEGIN REVIEWING
+          </Typography>
+        </Stack>
       </Button>
     </Box>
   );
