@@ -4,6 +4,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import TimelineMarker from './TimelineMarker';
 
 import { Comment } from '../generated/graphql';
+import { COMMENT_DISPLAY_DURATION } from '../constants';
 
 interface TimelineProps {
   time: number;
@@ -15,7 +16,14 @@ const Timeline = ({time, duration, comments}: TimelineProps) => {
   const markers = comments.map((comment) => {
     const position = comment.timecode / duration * 100;
     return (
-      <TimelineMarker position={position} key={comment.id} />
+      <TimelineMarker
+        position={position}
+        active={
+          time >= comment.timecode &&
+          time < comment.timecode + COMMENT_DISPLAY_DURATION
+        }
+        key={comment.id}
+      />
     );
   });
 
