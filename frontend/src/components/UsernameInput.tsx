@@ -42,11 +42,11 @@ const UsernameInput = ({
   const invalidName:boolean = content === 'Anonymous';
 
   const findCommentInput = (): HTMLInputElement => {
-    const textInput = inputRef.current?.querySelector("input:not([readonly])") as HTMLInputElement;
+    const textInput = inputRef.current?.querySelector('input:not([readonly])') as HTMLInputElement;
     if (textInput) {
       return textInput;
     } else {
-      throw new Error("Could not find raw textarea to focus");
+      throw new Error('Could not find raw textarea to focus');
     }
   };
 
@@ -60,7 +60,7 @@ const UsernameInput = ({
     <Box shown={shown} sx={{ width: '90%' }}>
       <Card elevation={0}>
         <Form
-          name="chooseUsername"
+          name='chooseUsername'
           onSubmit={event => {
             event.preventDefault();
             onSubmit(content);
@@ -71,7 +71,7 @@ const UsernameInput = ({
               label={invalidName ?
                 'Choose a username (other than "Anonymous")' :
                 'Choose a username'}
-              name="content"
+              name='content'
               ref={inputRef}
               fullWidth={true}
               value={content}
@@ -82,14 +82,14 @@ const UsernameInput = ({
           </CardContent>
           <CardActions>
             <Button
-              type="submit"
-              variant="contained"
-              size="small"
+              type='submit'
+              variant='contained'
+              size='small'
               disabled={invalidName}
             >
               Change username
             </Button>
-            <Button variant="outlined" color="secondary" size="small" onClick={onCancel}>
+            <Button variant='outlined' color='secondary' size='small' onClick={onCancel}>
               Cancel
             </Button>
           </CardActions>

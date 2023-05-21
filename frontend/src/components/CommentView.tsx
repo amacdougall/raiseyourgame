@@ -40,7 +40,7 @@ const CommentView = ({video, comment, editable, playbackTime}: CommentViewProps)
 
   const paragraphs = comment.content.split(/\r?\n/).map((p, n) => {
     return (
-      <Typography key={n} variant="body1" component="div">
+      <Typography key={n} variant='body1' component='div'>
         {p}
       </Typography>
     );
@@ -62,22 +62,22 @@ const CommentView = ({video, comment, editable, playbackTime}: CommentViewProps)
       <Box sx={{
         padding: '0rem 1rem',
       }}>
-        <Stack direction="row" sx={{marginTop: '1rem'}}>
+        <Stack direction='row' sx={{marginTop: '1rem'}}>
           <Stack>
             {paragraphs}
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+            <Typography sx={{ mb: 1.5 }} color='text.secondary'>
               <strong>{comment.username}</strong> at {formatTimecode(comment.timecode)}
             </Typography>
           </Stack>
           { editable ?
             <Box sx={{ marginLeft: 'auto' }}>
               <Form
-                name="deleteComment"
+                name='deleteComment'
                 action={`/video/${video.id}/comment/${comment.id}`}
-                method="delete"
+                method='delete'
               >
-                <IconButton type="submit" size="large">
-                  <DeleteIcon fontSize="inherit" />
+                <IconButton type='submit' size='large'>
+                  <DeleteIcon fontSize='inherit' />
                 </IconButton>
               </Form>
             </Box>

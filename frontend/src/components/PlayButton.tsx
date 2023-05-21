@@ -23,13 +23,13 @@ const Box = CollapsingBox({
  */
 const PlayButton = ({shown, onClick}: PlayButtonProps) => {
   return (
-    <Box shown={shown} sx={{ width: "90%" }}>
+    <Box shown={shown} sx={{ width: '90%' }}>
       <Button
         onClick={onClick}
-        variant="contained"
-        sx={{ borderRadius: '0.5rem', width: "100%" }}>
+        variant='contained'
+        sx={{ borderRadius: '0.5rem', width: '100%' }}>
         <Stack>
-          <Typography variant="h5">
+          <Typography variant='h5'>
             PLAY
           </Typography>
         </Stack>

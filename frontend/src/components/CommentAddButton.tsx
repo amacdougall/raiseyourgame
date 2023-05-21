@@ -31,18 +31,18 @@ const CommentAddButton = ({shown, showKeyboardHints, onClick}: CommentAddButtonP
   };
 
   return (
-    <Box shown={shown} sx={{width: "90%"}}>
+    <Box shown={shown} sx={{width: '90%'}}>
       <Button
         onClick={onClick}
-        variant="contained"
+        variant='contained'
         sx={{
-          borderRadius: '0.5rem', width: "100%"
+          borderRadius: '0.5rem', width: '100%'
         }}>
-          <Typography variant="h5">
+          <Typography variant='h5'>
             ADD COMMENT
           </Typography>
           {showKeyboardHints ?
-            <Typography variant="h5" sx={{ ...hideOnMobile }}>
+            <Typography variant='h5' sx={{ ...hideOnMobile }}>
               &nbsp;(or start typing)
             </Typography>
             : null

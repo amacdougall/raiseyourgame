@@ -32,7 +32,7 @@ const Timeline = ({time, duration, comments, seek}: TimelineProps) => {
   // Thanks, Github Copilot!
   // Ironically, one of the suggested completions for the preceding comment was
   // " (not)". Guess it doesn't meet with universal acclaim.
-  const onClick = (event) => {
+  const onClick = (event: React.MouseEvent<HTMLDivElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const playbackRatio = x / rect.width; // 0.0 to 1.0
@@ -41,10 +41,10 @@ const Timeline = ({time, duration, comments, seek}: TimelineProps) => {
   };
 
   return (
-    <Box sx={{paddingBottom: "1rem"}}>
+    <Box sx={{paddingBottom: '1rem'}}>
       <LinearProgress
-        sx={{ height: 10, cursor: "pointer" }}
-        variant="determinate"
+        sx={{ height: 10, cursor: 'pointer' }}
+        variant='determinate'
         value={time / duration * 100}
         onClick={onClick}
       />

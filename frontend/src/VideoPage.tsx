@@ -203,13 +203,12 @@ const VideoPage = () => {
       />
       <Stack
         spacing={0}
-        justifyContent="center"
-        alignItems="center"
+        justifyContent='center'
+        alignItems='center'
         sx={{ marginTop: '1rem' }}
       >
-        {/* TODO: rename to PlayButton? */}
         <PlayButton
-          key="goButton"
+          key='playerButton'
           shown={
             applicationState === APPLICATION_STATE.READY ||
             applicationState === APPLICATION_STATE.UNFOCUSED_PAUSED
@@ -217,7 +216,7 @@ const VideoPage = () => {
           onClick={onPlayButtonClick}
         />
         <CommentAddButton
-          key="commentAddButton"
+          key='commentAddButton'
           shown={
             applicationState === APPLICATION_STATE.REVIEWING ||
             applicationState === APPLICATION_STATE.UNFOCUSED_PLAYING
@@ -226,7 +225,7 @@ const VideoPage = () => {
           onClick={pauseForComment}
         />
         <CommentAdd
-          key="commentAdd"
+          key='commentAdd'
           video={video}
           playbackTime={playbackTime}
           shown={applicationState === APPLICATION_STATE.COMMENTING}
@@ -235,7 +234,7 @@ const VideoPage = () => {
           onNameChangeRequest={pauseForUsernameChange}
         />
         <UsernameInput
-          key="changeUsername"
+          key='changeUsername'
           username={localStorage.getItem('username') as string}
           shown={applicationState === APPLICATION_STATE.CHANGING_USERNAME}
           onSubmit={changeUsername}
@@ -243,7 +242,7 @@ const VideoPage = () => {
         />
         {comments}
       </Stack>
-      <Grid id="debugCommentGrid" container spacing={1}
+      <Grid id='debugCommentGrid' container spacing={1}
         sx={{
           marginLeft: '1rem',
           width: '80vw'
@@ -255,17 +254,17 @@ const VideoPage = () => {
           <h2>Debug: All Comments</h2>
           <div>{debugComments}</div>
           <h2>Add a comment</h2>
-          <Form name="createComment" action={`/video/${video.id}/comment`} method="post">
+          <Form name='createComment' action={`/video/${video.id}/comment`} method='post'>
             <div>
             <label>Timecode:
-              <input type="text" name="commentTimecode" id="commentTimecode" />
+              <input type='text' name='commentTimecode' id='commentTimecode' />
             </label>
             </div>
             <div>
-              <label htmlFor="commentContent">Comment:</label>
-              <textarea name="commentContent" id="commentContent"></textarea>
+              <label htmlFor='commentContent'>Comment:</label>
+              <textarea name='commentContent' id='commentContent'></textarea>
             </div>
-            <Button type="submit">Post</Button>
+            <Button type='submit'>Post</Button>
           </Form>
         </Grid>
       </Grid>

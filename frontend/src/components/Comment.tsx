@@ -19,18 +19,18 @@ const CommentView = ({comment, editable}: CommentViewProps) => {
   return (
     <Card>
       <CardContent>
-        <Typography variant="h5" component="div">
+        <Typography variant='h5' component='div'>
           {comment.content}
         </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+        <Typography sx={{ mb: 1.5 }} color='text.secondary'>
           <strong>{comment.username}</strong> at {comment.createdAt}
         </Typography>
         { editable ? <p>can edit!</p> : <p>cannot edit</p> }
       </CardContent>
       { editable ?
           <CardActions>
-            <Button size="small">Edit</Button>
-            <Button size="small">Delete</Button>
+            <Button size='small'>Edit</Button>
+            <Button size='small'>Delete</Button>
           </CardActions>
         : null
       }

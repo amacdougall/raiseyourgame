@@ -49,11 +49,11 @@ const CommentAdd = ({
   const username: string = localStorage.getItem('username') as string;
 
   const findCommentInput = (): HTMLTextAreaElement => {
-    const textarea = inputRef.current?.querySelector("textarea:not([readonly])") as HTMLTextAreaElement;
+    const textarea = inputRef.current?.querySelector('textarea:not([readonly])') as HTMLTextAreaElement;
     if (textarea) {
       return textarea;
     } else {
-      throw new Error("Could not find raw textarea to focus");
+      throw new Error('Could not find raw textarea to focus');
     }
   };
 
@@ -100,10 +100,10 @@ const CommentAdd = ({
     <Box shown={shown} sx={{width: '90%'}}>
       <Card elevation={0}>
         <Form
-          name="createComment"
+          name='createComment'
           ref={formRef}
           action={`/video/${video.id}/comment`}
-          method="post"
+          method='post'
           onSubmit={event => {
             if (content === '') {
               event.preventDefault(); // cancels submit
@@ -115,7 +115,7 @@ const CommentAdd = ({
           <CardContent>
             <TextField
               label={'Posting as: ' + username}
-              name="content"
+              name='content'
               ref={inputRef}
               fullWidth={true}
               multiline={true}
@@ -125,28 +125,28 @@ const CommentAdd = ({
               onChange={event => setContent(event.target.value)}
               focused
             />
-            <input type="hidden" name="timecode" value={playbackTime} />
+            <input type='hidden' name='timecode' value={playbackTime} />
           </CardContent>
           {/* CardActions 8px padding + 8px marginleft == CardContent 16px padding */}
           <CardActions sx={{ marginLeft: '8px' }}>
-            <Button type="submit" variant="contained" size="small">
-              <Typography variant="button">
+            <Button type='submit' variant='contained' size='small'>
+              <Typography variant='button'>
                 Post
               </Typography>
-              <Typography variant="button" sx={hideOnMobile}>
+              <Typography variant='button' sx={hideOnMobile}>
                 &nbsp;(or hit Enter)
               </Typography>
             </Button>
-            <Button variant="outlined" size="small" onClick={onNameChangeRequest}>
-              <Typography variant="button">
+            <Button variant='outlined' size='small' onClick={onNameChangeRequest}>
+              <Typography variant='button'>
                 Change name?
               </Typography>
             </Button>
-            <Button variant="outlined" color="secondary" size="small" onClick={cancelComment}>
-              <Typography variant="button">
+            <Button variant='outlined' color='secondary' size='small' onClick={cancelComment}>
+              <Typography variant='button'>
                 Cancel
               </Typography>
-              <Typography variant="button" sx={hideOnMobile}>
+              <Typography variant='button' sx={hideOnMobile}>
                 &nbsp;(or hit Esc)
               </Typography>
             </Button>

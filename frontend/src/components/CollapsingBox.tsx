@@ -42,7 +42,7 @@ const CollapsingBox = ({ duration, animationStyle }: CollapsingBoxProps) => {
       // 3 before its height is correct.
       setTimeout(() => {
         if (box?.clientHeight !== null && box?.clientHeight !== undefined) {
-          const endHeight = box.clientHeight + "px";
+          const endHeight = box.clientHeight + 'px';
 
           if (!expanded) {
             const expandedClass = css`
@@ -64,7 +64,7 @@ const CollapsingBox = ({ duration, animationStyle }: CollapsingBoxProps) => {
     }, []);
 
     return (
-      <Box ref={boxRef} css={animation} sx={{ overflow: "hidden", ...sx }}>
+      <Box ref={boxRef} css={animation} sx={{ overflow: 'hidden', ...sx }}>
         {children}
       </Box>
     );

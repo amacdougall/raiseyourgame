@@ -30,12 +30,12 @@ const TimelineMarker = ({position, active, onClick}: TimelineMarkerProps) => {
   {/* Could probably figure out how to apply these styles with
       emotion, but it just didn't seem like it was worth it. */}
   const inactiveStyle = {
-    transition: "transform 0.5s ease-out",
+    transition: 'transform 0.5s ease-out',
   };
 
   const activeStyle = {
-    transition: "transform 0.5s ease-out",
-    transform: "scale(1.25)"
+    transition: 'transform 0.5s ease-out',
+    transform: 'scale(1.25)'
   };
 
   return (
