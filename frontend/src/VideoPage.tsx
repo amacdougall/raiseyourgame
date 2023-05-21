@@ -73,6 +73,11 @@ const VideoPage = () => {
     }
   }, [applicationState]);
 
+  const seek = (time: number) => {
+    // second arg permits seeking beyond buffered content
+    player?.seekTo(time, true);
+  };
+
   const onPlayerReady = (player: YT.Player) => {
     setPlayer(player);
     setVideoDuration(player.getDuration());
@@ -194,6 +199,7 @@ const VideoPage = () => {
         time={playbackTime}
         duration={videoDuration}
         comments={video.comments}
+        seek={seek}
       />
       <Stack
         spacing={0}

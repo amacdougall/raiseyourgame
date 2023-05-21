@@ -6,9 +6,10 @@ import { css } from '@emotion/react';
 interface TimelineMarkerProps {
   position: number;
   active: boolean;
+  onClick: () => void;
 }
 
-const TimelineMarker = ({position, active}: TimelineMarkerProps) => {
+const TimelineMarker = ({position, active, onClick}: TimelineMarkerProps) => {
   const theme = useTheme();
   const width = 10;
   const height = 15;
@@ -26,24 +27,26 @@ const TimelineMarker = ({position, active}: TimelineMarkerProps) => {
     .map(([x, y]) => Math.round(x) + ',' + Math.round(y))
     .join(' ');
 
-    {/* Could probably figure out how to apply these styles with
-        emotion, but it just didn't seem like it was worth it. */}
-    const inactiveStyle = {
-      transition: "transform 0.5s ease-out",
-    };
+  {/* Could probably figure out how to apply these styles with
+      emotion, but it just didn't seem like it was worth it. */}
+  const inactiveStyle = {
+    transition: "transform 0.5s ease-out",
+  };
 
-    const activeStyle = {
-      transition: "transform 0.5s ease-out",
-      transform: "scale(1.25)"
-    };
+  const activeStyle = {
+    transition: "transform 0.5s ease-out",
+    transform: "scale(1.25)"
+  };
 
   return (
     <Box 
       sx={{
+        cursor: 'pointer',
         position: 'absolute',
         left: position + '%',
         marginLeft: -(width / 2) + 'px',
       }}
+      onClick={onClick}
     >
       <svg
         style={active ? activeStyle : inactiveStyle}

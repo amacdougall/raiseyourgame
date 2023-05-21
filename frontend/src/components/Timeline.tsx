@@ -10,9 +10,10 @@ interface TimelineProps {
   time: number;
   duration: number;
   comments: Comment[];
+  seek: (time: number) => void;
 }
 
-const Timeline = ({time, duration, comments}: TimelineProps) => {
+const Timeline = ({time, duration, comments, seek}: TimelineProps) => {
   const markers = comments.map((comment) => {
     const position = comment.timecode / duration * 100;
     return (
@@ -23,12 +24,14 @@ const Timeline = ({time, duration, comments}: TimelineProps) => {
           time < comment.timecode + COMMENT_DISPLAY_DURATION
         }
         key={comment.id}
+        onClick={() => seek(comment.timecode)}
       />
     );
   });
 
   return (
     <Box sx={{paddingBottom: '1rem'}}>
+      {/* handle click on LinearProgress with seek */}
       <LinearProgress
         sx={{height: 10}}
         variant="determinate"
