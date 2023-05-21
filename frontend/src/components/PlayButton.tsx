@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import { EXPAND_DURATION, EXPAND_ANIMATION_STYLE } from '../constants';
 import CollapsingBox from './CollapsingBox';
 
-interface GoButtonProps {
+interface PlayButtonProps {
   shown: boolean;
   onClick: () => void;
 }
@@ -21,16 +21,16 @@ const Box = CollapsingBox({
 /**
  * 
  */
-const GoButton = ({shown, onClick}: GoButtonProps) => {
+const PlayButton = ({shown, onClick}: PlayButtonProps) => {
   return (
-    <Box shown={shown}>
+    <Box shown={shown} sx={{ width: "90%" }}>
       <Button
         onClick={onClick}
         variant="contained"
-        sx={{ borderRadius: '0.5rem' }}>
+        sx={{ borderRadius: '0.5rem', width: "100%" }}>
         <Stack>
           <Typography variant="h5">
-            BEGIN REVIEWING
+            PLAY
           </Typography>
         </Stack>
       </Button>
@@ -38,4 +38,4 @@ const GoButton = ({shown, onClick}: GoButtonProps) => {
   );
 };
 
-export default GoButton;
+export default PlayButton;

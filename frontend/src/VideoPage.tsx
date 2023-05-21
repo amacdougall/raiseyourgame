@@ -15,14 +15,16 @@ import CommentAdd from './components/CommentAdd';
 import CommentAddButton from './components/CommentAddButton';
 import CommentView from './components/CommentView';
 import DebugCommentView from './components/DebugCommentView';
-import GoButton from './components/GoButton';
+import PlayButton from './components/PlayButton';
 import Timeline from './components/Timeline';
 import VideoPlayer from './components/VideoPlayer';
 import { Video } from './generated/graphql';
 
 const APPLICATION_STATE = {
-  READY: 'READY',
-  REVIEWING: 'REVIEWING',
+  UNFOCUSED_PAUSED: 'UNFOCUSED_PAUSED',
+  UNFOCUSED_PLAYING: 'UNFOCUSED_PLAYING',
+  READY: 'READY', // focused and not playing
+  REVIEWING: 'REVIEWING', // focused and playing: ready for comment
   COMMENTING: 'COMMENTING',
   CHANGING_USERNAME: 'CHANGING_USERNAME',
 };
@@ -43,6 +45,11 @@ const VideoPage = () => {
   const [ applicationState, setApplicationState ] = useState(APPLICATION_STATE.READY);
   const [ previousApplicationState, setPreviousApplicationState ] = useState(applicationState);
   const [ iframePollingInterval, setIframePollingInterval ] = useState(null);
+
+  const beginReviewing = () => enterApplicationState(APPLICATION_STATE.REVIEWING);
+  const pauseForComment = () => enterApplicationState(APPLICATION_STATE.COMMENTING);
+  const pauseForUsernameChange = () => enterApplicationState(APPLICATION_STATE.CHANGING_USERNAME);
+  const resumePreviousState = () => enterApplicationState(previousApplicationState);
 
   useEffect(() => {
     // defined within useEffect to get latest state variables
@@ -66,22 +73,46 @@ const VideoPage = () => {
     }
   }, [applicationState]);
 
-  const onReady = (player: YT.Player) => {
+  const onPlayerReady = (player: YT.Player) => {
     setPlayer(player);
     setVideoDuration(player.getDuration());
   };
 
-  const onPlayerFocus = () => {
-    // when player is focused, we can't receive keyboard input, so commenting
-    // won't work; switch to READY state to display GoButton
-    enterApplicationState(APPLICATION_STATE.READY);
+  // handle player state changes which occur while iframe is focused
+  const onPlay = () => {
+    if (applicationState === APPLICATION_STATE.UNFOCUSED_PAUSED) {
+      enterApplicationState(APPLICATION_STATE.UNFOCUSED_PLAYING);
+    }
   };
 
-  const onGoButtonClick = () => {
-    // NOTE: hidden button can retain focus and be "clicked" by Enter
-    // keystroke; so limit this behavior to the READY state.
-    if (applicationState == APPLICATION_STATE.READY) {
-      beginReviewing();
+  const onPause = () => {
+    if (applicationState === APPLICATION_STATE.UNFOCUSED_PLAYING) {
+      enterApplicationState(APPLICATION_STATE.UNFOCUSED_PAUSED);
+    }
+  };
+
+  const onPlayerFocus = () => {
+    // when player is focused, we can't receive keyboard input, so commenting
+    // won't work; switch to READY state to display PlayButton
+    if (player?.getPlayerState() === YT.PlayerState.PLAYING) {
+      enterApplicationState(APPLICATION_STATE.UNFOCUSED_PLAYING);
+    } else {
+      enterApplicationState(APPLICATION_STATE.UNFOCUSED_PAUSED);
+    }
+  };
+
+  const onPlayButtonClick = () => {
+    // NOTE: once this button has been clicked, it can be triggered again by an
+    // Enter keystroke; handle by pausing for comment
+    switch (applicationState) {
+      case APPLICATION_STATE.UNFOCUSED_PLAYING:
+      case APPLICATION_STATE.REVIEWING:
+        pauseForComment();
+        break;
+      case APPLICATION_STATE.UNFOCUSED_PAUSED:
+      case APPLICATION_STATE.READY:
+        beginReviewing();
+        break;
     }
   };
 
@@ -106,11 +137,6 @@ const VideoPage = () => {
 
     setApplicationState(desiredState);
   };
-
-  const beginReviewing = () => enterApplicationState(APPLICATION_STATE.REVIEWING);
-  const pauseForComment = () => enterApplicationState(APPLICATION_STATE.COMMENTING);
-  const pauseForUsernameChange = () => enterApplicationState(APPLICATION_STATE.CHANGING_USERNAME);
-  const resumePreviousState = () => enterApplicationState(previousApplicationState);
 
   const changeUsername = (username: string) => {
     localStorage.setItem('username', username);
@@ -155,7 +181,9 @@ const VideoPage = () => {
       </Helmet>
       <VideoPlayer
         video={video}
-        onReady={onReady}
+        onReady={onPlayerReady}
+        onPlay={onPlay}
+        onPause={onPause}
         onProgress={({time, duration}) => {
           setPlaybackTime(time);
           setVideoDuration(duration);
@@ -173,14 +201,22 @@ const VideoPage = () => {
         alignItems="center"
         sx={{ marginTop: '1rem' }}
       >
-        <GoButton
+        {/* TODO: rename to PlayButton? */}
+        <PlayButton
           key="goButton"
-          shown={applicationState === APPLICATION_STATE.READY}
-          onClick={onGoButtonClick}
+          shown={
+            applicationState === APPLICATION_STATE.READY ||
+            applicationState === APPLICATION_STATE.UNFOCUSED_PAUSED
+          }
+          onClick={onPlayButtonClick}
         />
         <CommentAddButton
           key="commentAddButton"
-          shown={applicationState === APPLICATION_STATE.REVIEWING}
+          shown={
+            applicationState === APPLICATION_STATE.REVIEWING ||
+            applicationState === APPLICATION_STATE.UNFOCUSED_PLAYING
+          }
+          showKeyboardHints={applicationState === APPLICATION_STATE.REVIEWING}
           onClick={pauseForComment}
         />
         <CommentAdd
@@ -208,7 +244,7 @@ const VideoPage = () => {
         }}>
         <Grid item xs={12} sx={{marginTop: '5rem'}}>
           <hr />
-          <h2>Debug: Comment State: {applicationState}</h2>
+          <h2>Debug: Application state: {applicationState}</h2>
           <h2>Debug: active item: {document.activeElement?.tagName}</h2>
           <h2>Debug: All Comments</h2>
           <div>{debugComments}</div>

@@ -10,6 +10,7 @@ import CollapsingBox from './CollapsingBox';
 
 interface CommentAddButtonProps {
   shown: boolean;
+  showKeyboardHints: boolean;
   onClick: () => void;
 }
 
@@ -21,7 +22,7 @@ const Box = CollapsingBox({
 /**
  * 
  */
-const CommentAddButton = ({shown, onClick}: CommentAddButtonProps) => {
+const CommentAddButton = ({shown, showKeyboardHints, onClick}: CommentAddButtonProps) => {
   const theme = useTheme();
   const hideOnMobile = {
     [theme.breakpoints.down('sm')]: {
@@ -30,20 +31,23 @@ const CommentAddButton = ({shown, onClick}: CommentAddButtonProps) => {
   };
 
   return (
-    <Box shown={shown}>
+    <Box shown={shown} sx={{width: "90%"}}>
       <Button
         onClick={onClick}
         variant="contained"
         sx={{
-          borderRadius: '0.5rem',
+          borderRadius: '0.5rem', width: "100%"
         }}>
         <Stack>
           <Typography variant="h5">
             ADD COMMENT
           </Typography>
-          <Typography variant="body1" sx={{ ...hideOnMobile }}>
-            (or start typing)
-          </Typography>
+          {showKeyboardHints ?
+            <Typography variant="body1" sx={{ ...hideOnMobile }}>
+              (or start typing)
+            </Typography>
+            : null
+          }
         </Stack>
       </Button>
     </Box>
