@@ -38,17 +38,15 @@ const CommentAddButton = ({shown, showKeyboardHints, onClick}: CommentAddButtonP
         sx={{
           borderRadius: '0.5rem', width: "100%"
         }}>
-        <Stack>
           <Typography variant="h5">
             ADD COMMENT
           </Typography>
           {showKeyboardHints ?
-            <Typography variant="body1" sx={{ ...hideOnMobile }}>
-              (or start typing)
+            <Typography variant="h5" sx={{ ...hideOnMobile }}>
+              &nbsp;(or start typing)
             </Typography>
             : null
           }
-        </Stack>
       </Button>
     </Box>
   );
