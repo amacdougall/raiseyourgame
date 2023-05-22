@@ -5,12 +5,25 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 import VideoService from './services/VideoService';
 
 const HomePage = () => {
   const [videoUrl, setVideoUrl] = React.useState('');
   const [videoTitle, setVideoTitle] = React.useState('');
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const inputFieldWidth = {
+    [theme.breakpoints.down('sm')]: {
+      width: '100%'
+    },
+    [theme.breakpoints.up('md')]: {
+      width: '25%'
+    }
+  };
 
   return (
     <Stack spacing={2} sx={{
@@ -39,17 +52,17 @@ const HomePage = () => {
       </Typography>
 
       <Form name='createVideo' action='/video' method='post'>
-        <Stack direction='row' spacing={2}>
+        <Stack direction={isMobile ? 'column' : 'row'} spacing={2}>
           { /* TODO: validate URL */ }
           <TextField
-            sx={{ width: '25%' }}
+            sx={{ ...inputFieldWidth }}
             label='YouTube URL'
             name='videoUrl'
             value={videoUrl}
             onChange={e => setVideoUrl(e.target.value)}
           />
           <TextField
-            sx={{ width: '25%' }}
+            sx={{ ...inputFieldWidth }}
             label='Video Title'
             name='videoTitle'
             value={videoTitle}
