@@ -244,6 +244,7 @@ const VideoPage = () => {
       </Stack>
       <Grid id='debugCommentGrid' container spacing={1}
         sx={{
+          display: 'none',
           marginLeft: '1rem',
           width: '80vw'
         }}>
