@@ -1,10 +1,15 @@
 import React from 'react';
 import Container from '@mui/material/Container';
-import { createBrowserRouter, RouterProvider, redirect } from 'react-router-dom';
+import {
+  RouterProvider,
+  createBrowserRouter,
+  redirect,
+} from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import HomePage from './HomePage';
 import VideoPage from './VideoPage';
+import VideoPageErrorBoundary from './VideoPageErrorBoundary';
 import VideoService from './services/VideoService';
 
 if (localStorage.getItem('sessionId') === null) {
@@ -54,7 +59,8 @@ const router = createBrowserRouter([
         throw new Error('/video/:videoId: videoId is undefined');
       }
       return await VideoService.getVideo({videoId: params.videoId});
-    }
+    },
+    errorElement: <VideoPageErrorBoundary />
   },
   {
     path: '/video/:videoId/comment',
