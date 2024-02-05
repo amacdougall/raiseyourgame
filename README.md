@@ -1,6 +1,15 @@
 # Raise Your Game
 
-TODO: document what this project is.
+This is a YouTube video annotation app. Plug in a URL, then when something
+interesting happens, just start typing. The video will pause until you hit Enter
+to submit the comment. Share the URL, and the recipient can see your comments
+appear as the video plays. I originally envisioned it as a way to share advice
+on gameplay footage, hence the name.
+
+Written in TypeScript, with a MongoDB database. GraphQL for client/server
+communication. I've wanted to make this application for a while; you can see an
+unfinished Clojure version on my Github as well.
+
 
 ## Running the prod setup in local docker
 
